@@ -1,0 +1,19 @@
+\section{Contributions}\label{sec:contributions}
+There are several contributions to this project.
+In this section, we will identify all of them.
+
+\begin{description}
+    \item \textbf{Embedding Method Contribution} This is the choice of embedding method to be used.
+    We had to choose an embedding technique that would work in a general case and that would be fast enough to work in an information retrieval system.
+    \item \textbf{Filtering Method Contribution} This is the structure and the grammar there is behind the DSL that the tool uses to further refine the user's search query.
+    \item \textbf{Engineering Contribution} This is the development of API Scout itself.
+    This tool is able to accept either a search query or an OpenAPI specification as input, preprocess it, embed it, and pre-filter the results by using the provided DSL query.
+    Finally, it performs an approximate K-NN search in the Elasticsearch index, as well as performing single-document indexing and retrieval.
+    \item \textbf{Dataset Contribution} In addition to the MongoDB dataset
+    containing the scraped OpenAPI specifications~\cite{souhaila_serbout_apistic_2024}, we have created our own dataset.
+    This new dataset is a combination of specification metadata, as well as 512-dimension vectors representing the contents of the documents.
+    Moreover, since the MongoDB dataset cannot be modified, we decided to link the original MongoDB documents with the newly created combined documents.
+    By doing so, we can have a reference to the complete OpenAPI Specification as well.
+    \item \textbf{Validation Contribution} In this final phase of the implementation of API Scout, we performed several experiments to test the performance of our tool.
+    In addition to experiments done to test the retrieval performance of the system, we also performed experiments to test the speed of the retrieval of a series of documents.
+\end{description}

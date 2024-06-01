@@ -1,0 +1,25 @@
+\section{ML Model}\label{sec:ml-model}
+The machine learning model used for vector embedding (USE -- Section~\ref{subsec:document-embedding}) is served by a docker image called \verb|tensorflow/serving|.
+This image expects a Tensorflow model to be inside the container.
+Using this image, it creates several REST endpoints.
+The endpoint used by us is the inference endpoint.
+We pass a series of fragments as input, and the container will respond with their respective vector embeddings (as explained in Section~\ref{sec:use-model}).
+The Docker compose file for this container is described in Listing~\ref{lst:compose-model}.
+
+\begin{lstlisting}[language=docker-compose,caption={Docker compose for the ml model},label={lst:compose-model},captionpos=b]
+      version: "3.8"
+      services:
+        models_ct:
+          image: tensorflow/serving
+          container_name: models
+          environment:
+           "MODEL_NAME=universal-encoder"
+          volumes:
+            - "./models/universal-encoder:/models/universal-encoder"
+          networks:
+            - backend
+
+      networks:
+        backend:
+          external: true
+\end{lstlisting}

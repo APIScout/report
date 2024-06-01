@@ -1,0 +1,72 @@
+\section{Parameters}\label{sec:parameters}
+To filter the result, several different categories of parameters are available.
+The filter parameters are divided in API, specification, and metrics categories. \\ \\
+In the case of the API category, we have all those parameters that are connected to the extracted metadata about the API (not the specification).
+In Table~\ref{tab:parameters-api}, we describe all the parameters in this category with their type and a short description.
+Table~\ref{tab:parameters-specification} describes the parameters in the specification category.
+These are the parameters relative to the metadata extracted from the OpenAPI specification.
+Finally, Table~\ref{tab:parameters-metrics} describes the parameters in the metrics category.
+These parameters are connected with the metric values of the specifications~\cite{souhaila_serbout_apistic_2024}.
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{l l p{9cm}}
+            \hline
+            \textbf{Name} & \textbf{Type} & \textbf{Description} \\ \hline
+            \verb|date| & date & The date when the API was published \\
+            \verb|length| & integer, range & The length of the natural language content string of the API  \\
+            \verb|api.name| & string & The name of the API \\
+            \verb|api.commits| & integer, range & The number of commits found for that API \\
+            \verb|api.latest| & boolean & If the given version of the API is the latest \\
+            \verb|api.source| & string & The source where the API was extracted from \\
+            \verb|api.version.raw| & version, range & The complete version of the api, e.g.\ 1.0.0-alpha.1 \\
+            \verb|api.version.valid| & boolean & If the version is compliant with the semantic versioning standard~\cite{preston-werner_semantic_nodate} \\
+            \verb|api.version.major| & integer, range & The part of the version containing the major version number \\
+            \verb|api.version.minor| & integer, range & The part of the version containing the minor version number \\
+            \verb|api.version.patch| & integer, range & The part of the version containing the patch version number \\
+            \verb|api.version.prerelease| & string & The part of the version containing the prerelease string \\
+            \verb|api.version.build| & string & The part of the version containing the build string \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{API parameters descriptions}
+    \label{tab:parameters-api}
+\end{table}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l l p{7cm}}
+            \hline
+            \textbf{Name} & \textbf{Type} & \textbf{Description} \\ \hline
+            \verb|specification.type| & string & The type of openAPI specification, can be \verb|specification.openapi| or \verb|swagger| \\
+            \verb|specification.version.raw| & version, range & The complete version of the api, e.g.\ 1.0.0-alpha.1 \\
+            \verb|specification.version.valid| & boolean & If the version is compliant with the semantic versioning standard~\cite{preston-werner_semantic_nodate} \\
+            \verb|specification.version.major| & integer, range & The part of the version containing the major version number \\
+            \verb|specification.version.minor| & integer, range & The part of the version containing the minor version number \\
+            \verb|specification.version.patch| & integer, range & The part of the version containing the patch version number \\
+            \verb|specification.version.prerelease| & string & The part of the version containing the prerelease string \\
+            \verb|specification.version.build| & string & The part of the version containing the build string \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Specification parameters descriptions}
+    \label{tab:parameters-specification}
+\end{table}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l c p{8cm}}
+            \hline
+            \textbf{Name} & \textbf{Type} & \textbf{Description} \\ \hline
+            \verb|metrics.security.endpoints| & integer, range & The number of API endpoints which explicitly employ specific security schemes~\cite{souhaila_serbout_apistic_2024} \\
+            \verb|metrics.schema.models| & integer, range & The number of data models present in the specification \\
+            \verb|metrics.schema.properties| & integer, range & The number of properties within the data models in the specification \\
+            \verb|metrics.structure.paths| & integer, range & The number of paths in the specification \\
+            \verb|metrics.structure.operations| & integer, range & The number of operations in the specification \\
+            \verb|metrics.structure.methods| & integer, range & The number of operations in the specification that use HTTP methods (GET, POST, PUT\ldots) \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Metrics parameters descriptions}
+    \label{tab:parameters-metrics}
+\end{table}

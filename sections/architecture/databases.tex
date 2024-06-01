@@ -1,0 +1,175 @@
+\section{Databases}\label{sec:databases}
+
+The system uses two databases to store the data, a MongoDB and an Elasticsearch database.
+In the following sections, we will explain more in depth the reasons behind choosing two different databases and how they are used.
+
+\subsection{Specifications Database}\label{subsec:specifications-database}
+The specifications database is a MongoDB instance.
+Since OpenAPI has multiple versions, and not all API specifications adhere to this standard, it is possible that the specifications have a slightly different structure.
+The reason behind choosing only some of the fields fo the original dataset is that we consider these to be the most relevant when building a retrieval system and a filtering DSL\@.
+We used MongoDB to save the OpenAPI specifications both because MongoDB handles well these kind of JSON/YAML documents, and because other API Analytics services -- outside the scope of this thesis, but which provide the source of the dataset -- rely on such database and data structure~\cite{souhaila_serbout_apistic_2024}. \\ \\
+The MongoDB database is composed of two collections, one containing the specifications and one containing the metrics for those specifications.
+
+\subsubsection{Specifications Collection}
+In the specifications collection, we have all the specifications that have been scraped from different sources: GitHub, BigQuery, APIs.guru and SwaggerHub~\cite{souhaila_serbout_apistic_2024}.
+Moreover, the documents have been saved with two different structures.
+The structure of the documents coming from SwaggerHub is described in Listing~\ref{lst:data-swaggerhub} and Table~\ref{tab:data-swaggerhub}.
+The structure of the documents coming from GitHub, instead, is described in Listing~\ref{lst:data-github} and Table~\ref{tab:data-github}.
+In Tables~\ref{tab:data-swaggerhub} and~\ref{tab:data-github}, we describe what each top-level field in the document means.
+In addition, we also highlight those fields that have been used in API Scout.
+
+\begin{lstlisting}[label={lst:data-swaggerhub},language=json,caption={Structure of the data coming from SwaggerHub},captionpos=b]
+          {
+              "_id": ObjectId("65ce1ae96eb5a9c18ffe38fc"),
+              "_fetching_reference": null,
+              "_API_reference": "https://api.swaggerhub.com/...",
+              "_meta": {},
+              "_name": "Bisan Enterprise API",
+              "_description": "This is the Bisan...",
+              "_created_at": "2020-12-15T09:42:49Z",
+              "_last_modified": "2020-12-15T09:42:49Z",
+              "_created_by": "mbanna",
+              "_API_url": "https://api.swaggerhub.com/.../1.0.1",
+              "_version": "1.0.1",
+              "_OPENAPI_version": "3.0.0",
+              "_API_spec_hash": null,
+              "_API_url_hash": "7b88c0cjh4a34vdb78...",
+              "api": {}
+          }
+\end{lstlisting}
+
+\begin{lstlisting}[label={lst:data-github},language=json,caption={Structure of the data coming from GitHub},captionpos=b]
+           {
+               "_id": ObjectId("65ce1ae96eb5a9c18ffe38fc"),
+               "id": 187463,
+               "api_spec_id": 472773,
+               "api_title": "math-api-v1",
+               "api_version": "1.0",
+               "commit_date": 2019-11-27T12:31:23.000+00:00,
+               "commits": 1,
+               "processed_at": 2023-11-27T12:31:23.000+00:00,
+               "sha": "vsd876vs68df68fs...",
+               "url": "https://raw.githubusercontent.com/...",
+               "latest": true,
+               "api": {}
+           }
+\end{lstlisting}
+
+\subsubsection{Metrics Collection}
+In the metrics collection, we have one document for each specification.
+The connection between the documents is done through the MongoID, same MongoID in the specification collection and metrics collection means the two documents are related.
+The metrics documents store some statistics about the corresponding OpenAPI specification.
+Listing~\ref{lst:data-metrics} and Table~\ref{tab:data-metrics} describe the structure of these documents.
+Moreover, as before, we also highlight those fields that have been used in API Scout.
+
+\begin{lstlisting}[label={lst:data-metrics},language=json,caption={Structure of the specification's metrics data},captionpos=b]
+            {
+                "_id": ObjectId("65ce1ae96eb5a9c18ffe38fc"),
+                "securityData": {
+                    "schemes": [],
+                    "endpointsCount": 20,
+                    "average": 10
+                },
+                "schemas": [],
+                "schemaSize": {
+                    "schemas": 3,
+                    "defined_schemas": 3,
+                    "properties": 5,
+                    "max_properties": 2,
+                    "min_properties": 1
+                },
+                "structureSize": {
+                    "paths": 3,
+                    "operations": 3,
+                    "used_methods": 3,
+                    "used_parameters": 2
+                },
+                "documentationsData": {}
+            }
+\end{lstlisting}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l p{11cm} c}
+            \hline
+            \textbf{Field} & \textbf{Description} & \textbf{Used} \\ \hline
+            \verb|_id| & The ID given to the document by MongoDB & \cmark \\
+            \verb|_fetching_reference| & The ID given by the crawler to the document & \xmark \\
+            \verb|_API_reference| & The URL of the API & \xmark \\
+            \verb|_meta| & Some metadata on the API server and validity of the JSON specification & \xmark \\
+            \verb|_name| & The name of the API (taken from the API specification) & \cmark \\
+            \verb|_description| & The description of the API (taken from the API specification) & \xmark \\
+            \verb|_created_at| & The date of creation of the API & \cmark \\
+            \verb|_last_modified| & The date the API was last modified & \xmark \\
+            \verb|_created_by| & The user that uploaded the API specification & \xmark \\
+            \verb|_API_url| & The specific URL for the specification version & \xmark \\
+            \verb|_version| & The API version & \cmark \\
+            \verb|_OPENAPI_version| & The OpenAPI version used in the specification & \cmark \\
+            \verb|_API_spec_hash| & The specification hash & \xmark \\
+            \verb|_API_url_hash| & The URL hash & \xmark \\
+            \verb|api| & The object containing the API specification & \cmark \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Description of the data contained in a SwaggerHub document}
+    \label{tab:data-swaggerhub}
+\end{table}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l l c}
+            \hline
+            \textbf{Field} & \textbf{Description} & \textbf{Used} \\ \hline
+            \verb|_id| & The ID given to the document by MongoDB & \cmark \\
+            \verb|id| & The ID of the API specification's commit & \xmark \\
+            \verb|api_spec_id| & The ID of the API specification & \cmark \\
+            \verb|api_title| & The name of the API & \cmark \\
+            \verb|api_version| & The version of the API & \cmark \\
+            \verb|commit_date| & The time at which this version was committed & \cmark \\
+            \verb|commits| & The number of commits this API has in total & \cmark \\
+            \verb|processed_at| & The time at which the API was processed by the crawler & \xmark \\
+            \verb|sha| & The hash of the specification & \xmark \\
+            \verb|url| & The URL of the specification & \xmark \\
+            \verb|latest| & If the current commit is the latest or not & \cmark \\
+            \verb|api| & The object containing the API specification & \cmark \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Description of the data contained in a GitHub document}
+    \label{tab:data-github}
+\end{table}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l p{9.5cm} c}
+            \hline
+            \textbf{Field} & \textbf{Description} & \textbf{Used} \\ \hline
+            \verb|_id| & The ID given to the document by MongoDB & \cmark \\
+            \verb|securityData.schemes| & A list of all the security schemes present in the specification & \xmark \\
+            \verb|securityData.endpointsCount| & The number of endpoints covered by some kind of security schema & \cmark \\
+            \verb|securityData.average| & The average number of endpoints covered by some kind of security schema & \xmark \\
+            \verb|schemas| & A list of all the schemas present in the specification & \xmark \\
+            \verb|schemaSize.schemas| & The number of schemas used in the specification & \cmark \\
+            \verb|schemaSize.defined_schemas| & The number of defined schemas in the specification & \xmark \\
+            \verb|schemaSize.properties| & The number of properties used in the specification & \cmark \\
+            \verb|schemaSize.max_properties| & The maximum number of properties used in a schema & \xmark \\
+            \verb|schemaSize.min_properties| & The minimum number of properties used in a schema & \xmark \\
+            \verb|structureSize.paths| & The number of paths in the specification & \cmark \\
+            \verb|structureSize.operations| & The number of operations in the specification & \cmark \\
+            \verb|structureSize.used_methods| & The number of methods used in the specification & \cmark \\
+            \verb|structureSize.used_parameters| & The number of parameters used in the specification & \xmark \\
+            \verb|documentationsData| & Object containing metrics about the documentation of endpoints & \xmark \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Description of the data contained in a metrics document}
+    \label{tab:data-metrics}
+\end{table}
+
+\subsection{Embeddings Database}\label{subsec:embeddings-database}
+To search for API specifications by querying their natural language descriptions, however, we need to save the vectorization of the natural language extracted from the OpenAPI specification somewhere.
+Since the MongoDB data structure could not be modified, the chosen database for the vectors was Elasticsearch -- which also contains metadata and metrics of the API specification. \\ \\
+The reason behind choosing Elasticsearch is that it offers out-of-the-box solutions to deal with textual embeddings.
+For instance, the embeddings -- when indexed -- are saved into a Small World Graph (Section ~\ref{subsec:hierarchical-navigable-small-world-graphs}), which helps with retrieval performance.
+In addition, it already offers an approximate K-NN search (Section~\ref{subsec:hierarchical-navigable-small-world-graphs}) API with pre- and post-filtering of the data.
+The aforementioned metadata and metrics are used to pre-filter the data in the K-NN search queries.

@@ -1,0 +1,31 @@
+\chapter{Architecture}\label{ch:architecture}
+API Scout is divided into three main parts: the backend, the databases, and the model.
+A general architecture of the project can be found in Figure~\ref{fig:backend-architecture}.
+In the backend, we have all those methods and APIs that deal with the embedding, indexing, and retrieval of the OpenAPI specifications.
+For storing the data, we use both a MongoDB and an Elasticsearch instance.
+The MongoDB instance is used for storing the OpenAPI json files.
+On the other hand, the Elasticsearch instance is used to store the metadata -- used by the DSL -- and the vector embeddings of the specifications. \\ \\
+From a tech stack point of view, we can see in Figure~\ref{fig:languages-architecture} that we used both Elasticsearch and MongoDB for the databases, Tensorflow for the embedding model, and Golang for the backend.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{assets/pdf/architecture/general-architecture}
+    \end{center}
+
+    \caption{API Scout's architecture}
+    \label{fig:backend-architecture}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{assets/pdf/architecture/languages-architecture}
+    \end{center}
+
+    \caption{API Scout's tech stack}
+    \label{fig:languages-architecture}
+\end{figure}
+
+\input{sections/architecture/databases}
+\input{sections/architecture/use-model}
+\input{sections/architecture/web-framework}
+\input{sections/architecture/embedding}

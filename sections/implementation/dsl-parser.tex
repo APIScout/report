@@ -1,0 +1,103 @@
+\section{DSL Compiler}\label{sec:dsl-parser}
+Since we want to use the filters given bt the users to search the documents in our Elasticsearch database, we need a way of translating our DSL into the Search DSL provided by Elasticsearch.
+The conversion of the filters is handled by the Elasticsearch Converter (Figure~\ref{fig:backend-architecture}) component.
+To generate the Elasticsearch filters, we have created a mapping between our DSL operators and the operators provided by Elasticsearch (Table~\ref{tab:dsl-to-es}). \\ \\
+As stated before, the filter using the range operator will be split up into two different filters, one for the lower bound and one for the upper bound.
+For this reason, there is no range mapping in Table~\ref{tab:dsl-to-es} between the DSL and Elasticsearch. \\ \\
+The single filters will then be joined together to form a \verb|bool| query.
+The structure of such query is described in Listing~\ref{lst:bool-query}.
+The \verb|bool| query contains two sections, \verb|must| and \verb|must_not|.
+All the filters with any operator -- except the \verb|!=| operator -- will be added to the \verb|must| array.
+The filters with the \verb|!=| operator will be added to the \verb|must_not| array.
+In Elasticsearch, the \verb|must| section represents an AND operator, thus a logic AND will be done between all filters contained in that array.
+On the other hand, the \verb|must_not| represents a NOT operator. \\ \\
+In addition to the user-specified filters, API Scout will -- by default -- add some filters in the query.
+In particular, we will add a \verb|api.latest==true| if a \verb|api.commits| filter is not specified, and a \verb|length>200| if a \verb|length| filter is not specified.
+
+\begin{center}
+    \begin{lstlisting}[label={lst:bool-query},caption={Structure of an Elasticsearch bool query},captionpos=b,language=json]
+                          {
+                              "bool": {
+                                  "must": [
+                                      { ... },
+                                      ...
+                                  ],
+                                  "must_not": [
+                                      { ... },
+                                      ...
+                                  ]
+                              }
+                          }
+    \end{lstlisting}
+\end{center}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{l l}
+            \hline
+            \textbf{DSL Filter} & \textbf{Elasticsearch Filter} \\ \hline
+            \verb|parameter=="value"| & \verb|"term": { "parameter": "value" }| \\
+            \verb|parameter!="value"| & \verb|"term": { "parameter": "value" }| \\
+            \verb|parameter~="value"| & \verb|"regexp": { "parameter": "value" }| \\
+            \verb|parameter>1| & \verb|"range": { "parameter": { "gt": 1 }}| \\
+            \verb|parameter<1| & \verb|"range": { "parameter": { "lt": 1 }}| \\
+            \verb|parameter>=1| & \verb|"range": { "parameter": { "gte": 1 }}| \\
+            \verb|parameter<=1| & \verb|"range": { "parameter": { "lte": 1 }}| \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{DSL to Elasticsearch conversion table}
+    \label{tab:dsl-to-es}
+\end{table}
+
+\noindent In API Scout, we can have two different types of search queries, one where a fragment (the natural language query used by K-NN) is present, and one without.
+If the fragment is present, then the component will create an Elasticsearch K-NN search query (Listing~\ref{lst:knn-query}), otherwise, it will create a normal Elasticsearch query (Listing~\ref{lst:regular-query}).
+
+\begin{center}
+    \begin{lstlisting}[label={lst:knn-query},language=json,caption={Structure of an Elasticsearch K-NN query},captionpos=b]
+                    {
+                        "from": 1,
+                        "size": 10,
+                        "knn": {
+                            "field": "embedding",
+                            "query_vector": [ ... ],
+                            "k": 100,
+                            "num_candidates": 10000,
+                            "filter": {
+                                "bool": {
+                                    "must": [
+                                        { ... },
+                                        ...
+                                    ],
+                                    "must_not": [
+                                        { ... },
+                                        ...
+                                    ]
+                                }
+                            }
+                        }
+                    }
+    \end{lstlisting}
+\end{center}
+
+\begin{center}
+    \begin{lstlisting}[label={lst:regular-query},language=json,caption={Structure of a normal Elasticsearch query},captionpos=b]
+                        {
+                            "from": 1,
+                            "size": 10,
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        { ... },
+                                        ...
+                                    ],
+                                    "must_not": [
+                                        { ... },
+                                        ...
+                                    ]
+                                }
+                            }
+                        }
+    \end{lstlisting}
+\end{center}
+

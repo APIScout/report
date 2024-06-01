@@ -1,0 +1,33 @@
+\section{Universal Sentence Encoder Model}\label{sec:use-model}
+
+To create the vector embeddings of the OpenAPI specifications, we rely on an external Docker container.
+This Docker container is based on the \verb|tensorflow/serving| image, which enables us to perform REST API calls to the deep learning model we use for the embedding.
+The model chosen for this project is the Universal Sentence Encoder (USE) by Google (Section~\ref{subsec:document-embedding}). \\ \\
+The model, after being sent some text fragments as input, will return one 512-dimension vector embedding for each fragment sent to the model.
+In practice, the Docker compose requires the request to be structured as in Listing~\ref{lst:model-request}, and the response to be structured as in Listing~\ref{lst:model-response}.
+
+\begin{center}
+    \begin{lstlisting}[label={lst:model-request},language=json,caption={Example of request body sent to the model},captionpos=b]
+                       {
+                           "instances": [
+                               "a random fragment",
+                               ...
+                           ]
+                       }
+    \end{lstlisting}
+\end{center}
+
+\begin{center}
+    \begin{lstlisting}[label={lst:model-response},language=json,caption={Example of response body sent to the model},captionpos=b]
+                           {
+                               "predictions": [
+                                   [
+                                       0.12321,
+                                       0.23123,
+                                       ...
+                                   ],
+                                   ...
+                               ]
+                           }
+    \end{lstlisting}
+\end{center}

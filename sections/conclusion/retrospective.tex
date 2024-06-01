@@ -1,0 +1,21 @@
+\section{Retrospective}\label{sec:retrospective}
+The main objective of this thesis was to create a tool which could efficiently embed, index, and retrieve OpenAPI Specifications.
+In addition to this, we also wanted the user to be able to further refine their search by applying specific filters.
+For this reason, we have also implemented an intuitive yet powerful filtering DSL\@. \\ \\
+Below, we are going to have a look at all the sections that compose this thesis.
+
+\begin{description}
+    \item \textbf{Background} In the first part of this thesis, we started the research process by looking at existing research and methodologies.
+    During this research process, we found several algorithms and methodologies that could have helped us reach our initial goal.
+    Moreover, we also looked at the existing literature to see if someone had already laid the foundations upon which we could build our tool.
+    \item \textbf{Experimentation} Following the study of the literature, we decided to create some proofs-of-concept to have a better understanding of the feasibility of our tool.
+    In particular, we created a proof-of-concept for the embedding and indexing part of the tool.
+    The evaluation of this method was done on a much smaller dataset.
+    \item \textbf{Methodology} After having developed a working and promising proof-of-concept, we started working on the actual implementation of the tool.
+    We started by describing the grammar, operations, types, and parameters of the DSL\@.
+    After, we defined the architecture of the system, and how all the different microservices would be connected to create the final system.
+    Finally, we talked about the actual implementation details of our system.
+    \item \textbf{Evaluation} Being done with the implementation part, we started the evaluation process.
+    Here, we employed different techniques and evaluation metrics to have a better understanding of the performance of our system.
+    In particular, we tested both the accuracy -- i.e.\ how well it performed in retrieving relevant documents -- and speed -- i.e.\ in how many milliseconds the system retrieved the documents -- of the system.
+\end{description}

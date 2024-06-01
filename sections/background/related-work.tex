@@ -1,0 +1,71 @@
+\section{Related Work}\label{sec:related-work}
+In this section, we are going to have a look at some of the papers and projects that are in some way related to what we have done with API Scout.
+In the first part of this section, we are going to compare our tool with other public OpenAPI aggregators.
+Next, we are going to talk about some research that has been done in this field on which we based our work.
+
+\subsection{API Aggregators}\label{subsec:api-aggregators}
+As said in Section~\ref{sec:motivation}, there exist many OpenAPI aggregators online.
+In Table~\ref{tab:comparison}, we can see a comparison between the main aggregators and API Scout.
+As we can see, API Scout contains almost double the amount of API specifications than the sum of specifications contained in all the other aggregators.
+Moreover, API Scout has several features that most of the other aggregators don't have.
+For example, API Scout stores and returns metadata about the API -- anything that was not already present in the OpenAPI Specification for that API -- as well as a set of pre-computed metrics.
+API Scout offers also the possibility to filter the data using a custom filtering DSL designed by us, as well as offering multiple versions of the same specifications -- i.e.\ a commit history
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{p{2.2cm} | c c c c c || c}
+            \textbf{Feature} & \textbf{APIs.guru} & \textbf{SwaggerHub} & \textbf{Public APIs} & \textbf{Rapid API} & \textbf{API Tracker} & \textbf{API Scout} \\ \hline
+            APIs Count & $\sim$2'500 & $\sim$500'00 & $\sim$1'400 & $\sim$40'000 & $\sim$5'600 & $\sim$1'000'000 \\
+            Title Searching & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+            Content Searching & \xmark & \cmark & \xmark & \cmark & \xmark & \cmark \\
+            Display API Metadata & \xmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+            Display API Metrics & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark \\
+            Filtering on API ID & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark \\
+            Filtering on Version & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark \\
+            Filtering on Metrics & \xmark & \xmark & \xmark & \xmark & \xmark & \cmark \\
+            Commit History & \xmark & \cmark & \xmark & \xmark & \xmark & \cmark \\
+        \end{tabular}
+    \end{center}
+
+    \caption{Comparison between the main OpenAPI Specifications aggregators and API Scout}
+    \label{tab:comparison}
+\end{table}
+
+\subsection{Research}\label{subsec:research}
+In the literature, we can find several different examples of research done in the field of embedding and indexing of OpenAPI Specifications.
+These papers represent the groundwork on which we built our research on top of.
+The research we have found in the literature can be divided into four main categories: API corpus construction, sentence embedding, OpenAPI Specification embedding, and information retrieval systems.
+
+\subsubsection{API Corpus Construction}
+In the case of the construction of an API corpus, we have a paper written by Assefi et al.~\cite{assefi_intelligent_2022}, in which they built a custom crawler to retrieve API documentation pages.
+In this study, they managed to crawl more than 2.8 million documentation pages.
+To retrieve these APIs, they have employed machine learning algorithms to filter out all non-REST APIs while retaining the REST ones.
+According to the authors, the objective of this study was to \("\)[allow] researchers and practitioners to harvest a large number of API documentations that can speed up the development of software technologies and reduce the cost of accessing resourceful APIs\("\)~\cite{assefi_intelligent_2022}. \\ \\
+Another paper that deals with the construction of an API corpus is Souhaila et al.~\cite{souhaila_serbout_apistic_2024}, where they built a corpus on OpenAPI Specification metrics.
+A corpus such as this is extremely useful when trying to study the evolution and structure of an OpenAPI Specification.
+In addition to the construction of the corpus, the paper goes more in-depth by analyzing the collected data.
+
+\subsubsection{Sentence Embedding}
+When dealing with the transformation of sentences into vectors, several different methods can be employed.
+In particular, the unsupervised algorithms used by Arora et al.~\cite{arora_simple_2019} and Mohammed et al.~\cite{mohammed_state---art_2021} can maintain the semantic meaning of the sentence.
+This is particularly useful when creating an information retrieval system which uses the meaning of the words as a similarity metric. \\ \\
+In addition to these two papers, another one has been published by Mu et al.~\cite{mu_all-but--top_2018}, in which they post-process the embeddings obtained by the embedding algorithms to better capture the semantics of the sentence by removing useless parts of the embedding -- such as the top principal components.
+
+\subsubsection{OpenAPI Specification Embedding}
+When dealing in particular with OpenAPI Specifications, some papers have explored using sentence embedding algorithms to create retrieval systems or to cluster similar specifications together -- effectively creating categories of specifications.
+In the case of the research done by Kotstein et al.~\cite{kotstein_restberta_2024}, they leveraged the natural language parts of API documentation for the training and fine-tuning of a BERT deep learning model.
+The goal of the RESTBERT model is to output a similar specification to the one given as input. \\ \\
+On the other hand, Lu et al.~\cite{lu_comparing_2024} developed a pipeline to cluster OpenAPI Specifications to create categories.
+This pipeline is divided into three main parts -- which have been used as inspiration for our own thesis.
+These parts are: preprocessing, vectorization, and clustering.
+In the preprocessing step, an OpenAPI Specification is cleaned of all the non-natural language fields, and the keywords are extracted by means of an SBERT model.
+The list of extracted keywords is then fed to a GloVe embedding model and a vector embedding for the sentence is generated.
+Finally, the Mean Shift algorithm clusters the embeddings to create the API categories.
+
+\subsubsection{Information Retrieval Systems}
+Finally, we have a group of papers that deal with information retrieval systems of structured or semi-structured documents.
+In the case of both research papers written by Bogner et al.~\cite{bogner_evolvability_2020} and Bragilovski et al.~\cite{bragilovski_how_2024}, they embedded structured data and indexed it in an information retrieval system. \\ \\
+On the other hand, Wei et al.~\cite{wei_survey_2023} performed a survey on several existing query-based API information retrieval systems.
+From their research, it emerged that in most cases the data regarding the APIs are taken from GitHub.
+These systems mostly use either deep learning techniques for the embedding process -- such as BERT -- or other techniques such as Word2Vec.
+Finally, for the evaluation of the systems, the most used metrics are precision, recall, accuracy, and mean average precision.

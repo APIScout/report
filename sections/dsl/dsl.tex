@@ -1,0 +1,45 @@
+\chapter{Filtering DSL}\label{ch:filtering-dsl}
+The filtering DSL compiler is a collection of components that handle the logic for the translation of our DSL into a query that can be understood by the Elasticsearch search API\@.
+Let's begin the description of the compiler by understanding the reason behind why we decided to implement it.
+This is a tool that is mainly aimed at researchers to perform any kind of empirical study on a subset of our APIs. \\ \\
+Let's take a real-world scenario.
+Let's say that some researchers are conducting a study on the evolution of security in REST API endpoints over time.
+First of all, they want to find some APIs that have more than a couple of commits in their history, as well as a number of paths between 10 and 100.
+To do so, they could use the filters in Figure~\ref{fig:filter-commits} to retrieve all APIs with more than two commits in their history, and with a number of paths between 10 and 100.
+
+\begin{figure}[!h]
+    \begin{center}
+        \verb|api.commits>2 metrics.structure.paths<>(10,100]|
+    \end{center}
+
+    \caption{Filter on the number of commits and paths of an API}
+    \label{fig:filter-commits}
+\end{figure}
+
+\noindent As you can see, the structure of the filter is pretty straight-forward, we have the name of the field to filter for on the left-hand side (\verb|api.commits|), the operator in the middle (\verb|>|), and the value on the right-hand side (\verb|2|).
+In the case of the range operator (\verb|<>|), the right-hand side is a little bit more complex.
+The round parenthesis indicates that 10 must not be included in the range (thus \verb|>10|), while the square bracket indicates that 100 must be included in the range (thus \verb|<=100|).
+Moreover, the space between the filters indicates a logic AND operation.
+Thus, the resulting APIs must have more than 2 commits, as well as a number of paths between 10 (not included), and 100 (included). \\ \\
+The researchers will now have IDs of several APIs with more than two commits in their history.
+What they would like to do now is to retrieve the commit history for those APIs.
+To do so, they can do one search request for each API ID in which they use the filter in Figure~\ref{fig:filter-apis}.
+This filter tells API Scout to only retrieve those specifications that have that specific API ID -- i.e.\ the commit history for that API\@.
+
+\begin{figure}[!h]
+    \begin{center}
+        \verb|api.id==306512|
+    \end{center}
+
+    \caption{Filter on a specific API ID}
+    \label{fig:filter-apis}
+\end{figure}
+
+\noindent Finally, the researchers will now be able to analyze how the security of the endpoints evolved in time, since API scout will return them metadata about the specifications, as well as the full JSON specification.
+In the following sections, we will describe the inner workings of the language, including the grammar and its components.
+
+\input{sections/dsl/grammar}
+\input{sections/dsl/structure}
+\input{sections/dsl/types}
+\input{sections/dsl/parameters}
+\input{sections/dsl/operators}

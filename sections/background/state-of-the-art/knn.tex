@@ -1,0 +1,10 @@
+\subsection{K-Nearest Neighbors}\label{subsec:k-nearest-neighbors}
+K-Nearest Neighbors is a non-parametric supervised learning algorithm used for classification or regression~\cite{cover_nearest_1967}.
+When dealing with document embeddings, the K-NN algorithm will return the $K$ most semantically similar documents to a given embedded document. \\ \\
+In the case of information retrieval systems, we have a user-defined document, which represents the query made by the user.
+This query is then transformed into a document embedding.
+Once we have a vector embedding of the query, we can compare it to all the documents present in the database -- represented as vector embeddings as well.
+The K-NN algorithm will help us find the $K$ documents that are the most semantically similar to the original query. \\ \\
+The concept of similarity between two documents is defined by the distance between two documents.
+Similarity between documents can be computed using different metrics, such as the L2 norm, the dot product, the cosine, and the maximum inner product.
+In information retrieval systems, the most used metric is the cosine similarity~\cite{guo_testing_2022}.

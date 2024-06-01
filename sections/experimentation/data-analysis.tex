@@ -1,0 +1,25 @@
+\section{Data Analysis}\label{sec:data-analysis}
+Before delving further into the approach taken for the indexing and retrieval of the documents, we shall analyze the documents contained in the APIs.guru dataset. \\ \\
+During this phase, we had to visualize the semantic relationship of the documents.
+To do so, we embedded the documents in 512 dimensions.
+Once embedded, we performed a dimensionality reduction using t-SNE\@.
+At this point, we added the third dimension representing the category of the document and plotted the points.
+The category of the API specification is taken from the \verb|info.x-apisguru-categories| tag manually assigned by APIs.guru. \\ \\
+The aforementioned steps produce the result depicted in Figure.
+As we can see from both plots, the majority of the documents have been tagged with the \("\)cloud\("\) (\textbf{1}) and \("\)analytics\("\) (\textbf{2}) labels, even though most of them are not tightly clustered together.
+Upon closer inspection, though, we can see that most – if not all – documents from the \("\)marketing\("\) (\textbf{3}) category are very close to one another.
+
+\begin{figure}%
+    \centering
+    \begin{minipage}{.6\textwidth}
+        \centering
+        \subfloat[\centering API Specifications Color-Coded by \texttt{x-apisguru-categories} field]{{\includegraphics[width=\linewidth]{assets/png/experimentation/categories}}}
+    \end{minipage}%
+    \begin{minipage}{.4\textwidth}
+        \centering
+        \subfloat[\centering \texttt{x-apisguru-categories} Word Cloud]{{\includegraphics[width=\linewidth]{assets/png/experimentation/cloud}}}
+    \end{minipage}
+
+    \caption{Visualization of APIs.guru Dataset by Category and Semantic Relationship}
+    \label{fig:documents-plot}
+\end{figure}

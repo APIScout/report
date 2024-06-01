@@ -1,0 +1,32 @@
+\section{Structure}\label{sec:structure}
+As we saw in Section~\ref{sec:grammar}, filters are composed of three main parts: a left-hand side -- the parameter, an operator, and a right-hand side -- the value.
+To concatenate multiple filters, just separate them with a space.
+The space between the filters is interpreted as an AND operator.
+The filters described in Listing~\ref{fig:example-filters} are some examples of valid filters.
+For example, let's take \verb|api.version.raw<>(1.0.0,2.0.0]|.
+In this case, \verb|api.version.raw| is the parameter, \verb|<>| is the range operator, and \verb|(1.0.0,2.0.0]| is the value, in this case the range. \\ \\
+In order for the filter to be valid, it must meet several requirements.
+These requirements are:
+
+\begin{enumerate}
+    \item The parameter must be valid -- i.e.\ it should exist;
+    \item The array of supported types of the operator must contain the type of the parameter;
+    \item The value's type must the parameter's type;
+    \item In the case of a range filter:
+    \begin{itemize}
+        \item The range must be surrounded by either square or round brackets;
+        \item The range must be composed of two elements;
+        \item The types of the range delimiters must match the one of the parameter.
+    \end{itemize}
+\end{enumerate}
+
+\begin{figure}[!h]
+    \begin{center}
+        \verb|api.version.raw<>(1.0.0,2.0.0]| \\
+        \verb|api.name~="weather"| \\
+        \verb|api.commits>=10|
+    \end{center}
+
+    \caption{Examples of valid filters}
+    \label{fig:example-filters}
+\end{figure}

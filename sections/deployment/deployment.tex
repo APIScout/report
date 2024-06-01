@@ -1,0 +1,20 @@
+\chapter{Deployment}\label{ch:deployment}
+The deployment of the API Scout platform is divided into three main parts: databases, machine learning model, and web sever.
+A general deployment structure can be found in Figure~\ref{fig:deployment-architecture}.
+The databases run on two separate containers, one for the MongoDB instance, and one for the Elasticsearch instance.
+The embedding machine learning model runs in a separate container, as does the web server.
+All of these containers communicate together with a common Docker network, and only port 80 can be accessed from the outside.
+
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.55\linewidth]{assets/pdf/architecture/deployment-view}
+    \end{center}
+
+    \caption{API Scout's deployment architecture}
+    \label{fig:deployment-architecture}
+\end{figure}
+
+\input{sections/deployment/databases}
+\input{sections/deployment/models}
+\input{sections/deployment/web-server}
+\input{sections/deployment/ci-cd}

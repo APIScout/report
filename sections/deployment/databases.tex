@@ -1,0 +1,52 @@
+\section{Databases}\label{sec:databases2}
+The two databases -- MongoDB and Elasticsearch -- are contained in two separate Docker containers.
+The Docker compose file for these two services is described in Listing~\ref{lst:compose-database}.
+Both services do not expose any port to the outside, only in the \verb|backend| Docker network.
+In addition, the Elasticsearch instance uses SSL/TLS to enable security when transporting data to and from the database.
+
+\begin{lstlisting}[language=docker-compose,caption={Docker compose for the databases},label={lst:compose-database},captionpos=b]
+version: "3.8"
+services:
+  mongo_db:
+    container_name: mongo
+    image: mongo:latest
+    environment:
+      "MONGO_INITDB_ROOT_USERNAME=root"
+      "MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}"
+    volumes:
+      - "mongo:/data/db"
+    networks:
+      - backend
+
+  es_db:
+    container_name: es
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    environment:
+      - "node.name=es"
+      - "cluster.initial_master_nodes=es"
+      - "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}"
+      - "ES_JAVA_OPTS=-Xms6000m -Xmx6000m"
+      - "xpack.license.self_generated.type=trial"
+      - "xpack.security.enabled=true"
+      - "xpack.security.http.ssl.enabled=true"
+      - "xpack.security.http.ssl.key=${CERTS_DIR}/es/es.key"
+      - "xpack.security.http.ssl.certificate_authorities=
+          $CERTS_DIR/ca/ca.crt"
+      - "xpack.security.http.ssl.certificate=$CERTS_DIR/es/es.crt"
+      - "xpack.security.transport.ssl.enabled=true"
+      - "xpack.security.transport.ssl.verification_mode=certificate"
+      - "xpack.security.transport.ssl.certificate_authorities=
+          ${CERTS_DIR}/ca/ca.crt"
+      - "xpack.security.transport.ssl.certificate=${CERTS_DIR}/es/es.crt"
+      - "xpack.security.transport.ssl.key=${CERTS_DIR}/es/es.key"
+    volumes:
+      - "data:/usr/share/elasticsearch/data"
+      - "certs:${CERTS_DIR}"
+    networks:
+      - backend
+
+  volumes: { "data", "certs", "mongo" }
+  networks:
+    backend:
+      external: true
+\end{lstlisting}

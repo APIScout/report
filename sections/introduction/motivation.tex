@@ -1,0 +1,9 @@
+\section{Motivation}\label{sec:motivation}
+From our research, we noticed that there is a lack of tools and services that can be helpful in the study of the evolution and current state of HTTP APIs.
+Several API aggregators exist, such as APIs.guru\footnote{https://apis.guru/}, SwaggerHub\footnote{https://app.swaggerhub.com/search}, Public APIs\footnote{https://publicapis.dev/}, RapidAPI\footnote{https://rapidapi.com/search/}, API Tracker\footnote{https://apitracker.io/}.
+What these tools lack is a way of indexing the documents in such a way that a user can look for specifications that are semantically similar to the user-defined query. \\ \\
+In the previously mentioned platforms, indexing of OpenAPI Specifications is superficial and most of the time only the title is matched with the search query.
+With API Scout, we want to index API specifications based not only on their title but also on all of its fields that contain natural language descriptions.
+Another feature missing in the aforementioned platforms is a way to properly filter the documents returned by the system.
+In addition, the user should not only be able to filter on basic fields such as the title or the description of the specification, but also on more complex fields such as the version and the metrics of the document.
+For this reason, API Scout comes with a Domain Specific Language (DSL) that can be used to further refine a user's search.

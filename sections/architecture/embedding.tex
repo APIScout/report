@@ -1,0 +1,10 @@
+\section{Preprocessing and Embedding}\label{sec:preprocessing-and-embedding}
+Preprocessing and embedding of queries are done inside the \verb|embedding| group of components.
+In this group, the system receives the embedding from the web framework controller, and starts the embedding process.
+Before transforming the specification into a vector of floating point numbers, it must be preprocessed. \\ \\
+In the preprocessing stage, we extract all the specification tags that contain natural language.
+After the extraction of these values, they are all inserted into a string which is passed to the Markdown remover component.
+This component will strip from the string all of those symbols and structures that are used to defined Markdown components.
+Moreover, the string is cleaned of all URL, even if they are not in a Markdown format. \\ \\
+Once the string has been properly cleaned, it is passed to the USE model via a POST request.
+The model will then return a 512-dimension array of floating point numbers representing the string in a 512-dimensional space.

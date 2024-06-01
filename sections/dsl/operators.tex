@@ -1,0 +1,45 @@
+\section{Operators}\label{sec:operators}
+To complete the DSL structure, we have defined several different operators.
+These operators can be used to compare values of specific types with each other.
+The operators supported by API Scout are described in Table~\ref{tab:operators}. \\ \\
+In the case of the range operation, the parser will decompose the filter into two different filters.
+Let's take for example, let' take the range \verb|[23,12)|.
+Based on the type of parentheses, the parser will create different filters.
+In this case, it will create a \verb|>=23| and \verb|<12| filter.
+The full list of parentheses conversions is shown in Table~\ref{tab:conversion-table}.
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{c c p{2.5cm} p{9cm}}
+            \hline
+            \textbf{Operator} & \textbf{Name} & \textbf{Supported Types} & \textbf{Description} \\ \hline
+            \verb|==| & Equal & boolean, string, integer, version, date & Check if two values are the same \\
+            \verb|!=| & Not Equal & boolean, string, integer, version, date & Check if two values are different \\
+            \verb|~=| & Contain & string, version & Check if the right-hand side of the filter is contained in the parameter's value \\
+            \verb|<>| & Range & integer, version, date & Check if the right-hand side of the filter is contained in the given range \\
+            \verb|>| & Greater & integer, version, date & Check if the right-hand side value is strictly greater than the left-hand side value \\
+            \verb|<| & Less & integer, version, date & Check if the right-hand side value is strictly less than the left-hand side value \\
+            \verb|>=| & Greater Equal & integer, version, date & Check if the right-hand side value is greater or equal to the left-hand side value \\
+            \verb|<=| & Less Equal & integer, version, date & Check if the right-hand side value is less than or equal to the left-hand side value \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Operators descriptions}
+    \label{tab:operators}
+\end{table}
+
+\begin{table}[!h]
+    \begin{center}
+        \begin{tabular}{c c}
+            \hline
+            \textbf{Parenthesis} & \textbf{Operator} \\ \hline
+            \verb|[| & \verb|>=| \\
+            \verb|]| & \verb|<=| \\
+            \verb|(| & \verb|>| \\
+            \verb|)| & \verb|<| \\ \hline
+        \end{tabular}
+    \end{center}
+
+    \caption{Parentheses conversion table}
+    \label{tab:conversion-table}
+\end{table}

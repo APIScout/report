@@ -1,0 +1,305 @@
+\section{Web Framework}\label{sec:web-framework}
+In the following section we will present all the implementation details of the Web framework.
+A detailed view of all the implemented endpoints is provided, explaining the parameters, requests, and response structures.
+
+\subsection{Indexing Endpoint}\label{subsec:indexing-endpoint}
+The implementation of the indexing endpoint is described in Figure~\ref{fig:indexing-request}.
+The endpoint takes an OpenAPI specification as input, and inserts it both in MongoDB and in Elasticsearch.
+If some errors are encountered in the process of indexing the document, then a \verb|400| or \verb|500| error is thrown to the user.
+
+\begin{figure}[!h]
+    \begin{apiRoute}{post}{/api/v1/specification}{insert a new OpenAPI specification}
+        \begin{routeParameter}
+            \noRouteParameter{no parameter}
+        \end{routeParameter}
+
+        \begin{routeRequest}{application/json}
+            \begin{routeRequestBody}
+{
+    "api": {
+        ...
+    }
+}
+            \end{routeRequestBody}
+        \end{routeRequest}
+
+        \begin{routeResponse}{application/json}
+            \begin{routeResponseItem}{200}{ok}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{400}{error: Bad Request}
+                \begin{routeResponseItemBody}
+{
+    "message": "The body has not been correctly formatted"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{500}{error: Internal Server Error}
+                \begin{routeResponseItemBody}
+{
+    "message": "Some error string"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+        \end{routeResponse}
+    \end{apiRoute}
+
+    \caption{Indexing POST request}
+    \label{fig:indexing-request}
+\end{figure}
+
+\subsection{Searching Endpoint}\label{subsec:searching-endpoint}
+The implementation of the searching endpoint is described in Figure~\ref{fig:searching-request}.
+The endpoint takes as parameters the size of a page, the number of the page to be returned, and the $k$ to be assigned to the K-NN algorithm. \\ \\
+Moreover, it takes a body as input.
+The body consists of three main parts, the \verb|fragment|, the \verb|filters|, and the \verb|fields|.
+The \verb|fragment| contains the search query, this will then be embedded and an approximate K-NN algorithm will be performed to retrieve the $k$ most similar documents.
+The results will be pre-filtered if filters are provided in the \verb|filters| section of the body.
+The \verb|filters| contain a query written using our DSL\@.
+Finally, the \verb|fields| array contains all the fields that the user wants when receiving the results.
+For example, if the user only specifies \verb|metadata|, then the endpoint will not return the strings containing the actual specification. \\ \\
+In Listing~\ref{lst:search-response} we have a full example of a response the user will receive when using the search endpoint.
+Each returned document is composed of \verb|metadata| (Lines 3--50) and \verb|specification| (Line 51) sections. \\ \\
+The \verb|metadata| key is used to return all the data relative to the api and its specification.
+In the case of the api (Lines 8--23), this includes the date at which the api was published (Line 6), the name of the api (Line 10), the version of the api (Lines 11--19), the number of commits -- which will be greater than 0 if the api comes from GitHub -- (Line 20), a flag indicating if the given api version is the latest (Line 21), and the source of the api -- which can be either GitHub or SwaggerHub -- (Line 22). \\ \\
+In the case of the metrics (Lines 24--37), we have some information about the number of protected endpoints (Line 26), the number of models (Line 29) and properties (Line 30), and the number of paths (Line 33), operations (Line 34), and methods (Line 35).
+In the case of the specification (Lines 38--50), this includes the version of the OpenAPI specification (Lines 39--47), and the type of specification -- this can either be openapi or swagger -- (Line 48). \\ \\
+Finally, the \verb|specification| key (Line 51), contains a string version of the OpenAPI specification's JSON object.
+All the keys present in the metadata section of the response can be used as filter keys.
+How these keys can be used to filter the results will be discussed in the DSL subsection of this report.
+
+\begin{center}
+    \lstset{
+        numbers=left,
+        firstnumber=1,
+        numberfirstline=true
+    }
+
+    \begin{lstlisting}[label={lst:search-response},language=json,caption={Example of response for the search endpoint},captionpos=b]
+          [
+              {
+                  "metadata": {
+                      "mongo-id": "655a2323863e4a08a6ef68b6",
+                      "length": 355,
+                      "date": "2015-08-30T21:13:25Z",
+                      "score": 0.58434016,
+                      "api": {
+                          "id": 4853,
+                          "name": "ElasticAuth Api",
+                          "version": {
+                              "raw": "1.0.0",
+                              "valid": true,
+                              "major": 1,
+                              "minor": 0,
+                              "patch": 0,
+                              "prerelease": "",
+                              "build": ""
+                          },
+                          "commits": 4,
+                          "latest": true,
+                          "source": "github"
+                      },
+                      "metrics": {
+                          "security": {
+                              "endpoints": 97
+                          },
+                          "schema": {
+                              "models": 50,
+                              "properties": 46
+                          },
+                          "structure": {
+                              "paths": 43,
+                              "operations": 54,
+                              "methods": 37
+                          }
+                      },
+                      "specification": {
+                          "version": {
+                              "raw": "2.0",
+                              "valid": false,
+                              "major": 0,
+                              "minor": 0,
+                              "patch": 0,
+                              "prerelease": "",
+                              "build": ""
+                          },
+                          "type": "swagger"
+                      }
+                  },
+                  "specification": "..."
+              }
+          ]
+    \end{lstlisting}
+\end{center}
+
+\begin{figure}[!h]
+    \begin{apiRoute}{post}{/api/v1/search}{search OpenAPI specifications}
+        \begin{routeParameter}
+            \routeParamItem{page}{the page to return}
+            \routeParamItem{size}{the size of the page to return}
+            \routeParamItem{k}{the k of the K-NN algorithm}
+        \end{routeParameter}
+
+        \begin{routeRequest}{application/json}
+            \begin{routeRequestBody}
+{
+    "fragment": "some query",
+    "filters": "api.version.raw>=1.0.0",
+    "fields": [ "metdata", "specification" ]
+}
+            \end{routeRequestBody}
+        \end{routeRequest}
+
+        \begin{routeResponse}{application/json}
+            \begin{routeResponseItem}{200}{ok}
+                \begin{routeResponseItemBody}
+[
+    {
+        "metadata": { ... },
+        "specification": "..."
+    }
+]
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{400}{error: Bad Request}
+                \begin{routeResponseItemBody}
+{
+    "message": "The body has not been correctly formatted"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{500}{error: Internal Server Error}
+                \begin{routeResponseItemBody}
+{
+    "message": "Some error string"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+        \end{routeResponse}
+    \end{apiRoute}
+
+    \caption{Searching POST request}
+    \label{fig:searching-request}
+\end{figure}
+
+\subsection{Retrieval Endpoint}\label{subsec:retrieval-endpoint}
+The implementation of the searching endpoint is described in Figure~\ref{fig:retrieval-request}.
+This endpoint expects an \verb|id| to be passed in the URL\@.
+The retrieval endpoint will simply get the passed id, and look for the document inside the Elasticsearch database.
+If the document is found, then we look for the document with the same id in the MongoDB database.
+Finally, if both documents were found, the backend will perform a merge of the two documents -- by getting the metadata from Elasticsearch and a string version of the full specification from the MongoDB document.
+The structure of the response will be the same as one of the documents returned by the search endpoint (Listing~\ref{lst:search-response})
+
+\begin{figure}[!h]
+    \begin{apiRoute}{get}{/api/v1/specification/\{id\}}{get a specific OpenAPI specification}
+        \begin{routeParameter}
+            \noRouteParameter{no parameter}
+        \end{routeParameter}
+
+        \begin{routeResponse}{application/json}
+            \begin{routeResponseItem}{200}{ok}
+                \begin{routeResponseItemBody}
+{
+    "metadata": { ... },
+    "specification": "..."
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{404}{error: Not Found}
+                \begin{routeResponseItemBody}
+{
+    "message": "The document with the given ID has not been found"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{500}{error: Internal Server Error}
+                \begin{routeResponseItemBody}
+{
+    "message": "Some error string"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+        \end{routeResponse}
+    \end{apiRoute}
+
+    \caption{Retrieval GET request}
+    \label{fig:retrieval-request}
+\end{figure}
+
+\subsection{Preprocessing Endpoint}\label{subsec:preprocessing-endpoint}
+The implementation of the preprocessing pipeline is described in Figure~\ref{fig:preprocessing-request}.
+This endpoint, as said earlier, is a helper endpoint used in the evaluation of the system. \\ \\
+It will simply perform the preprocessing pipeline by extracting the natural language fields from the OpenAPI specification passed as input, and remove all the markdown structures that could be present in those fields. \\ \\
+The response body of this endpoint will contain a string that represents the cleaned input that would be then embedded by the Universal Sentence Encoder model (Section~\ref{sec:use-model}).
+
+\begin{figure}[!h]
+    \begin{apiRoute}{post}{/api/v1/preprocess}{get the preprocessed string of an OpenAPI specification or query}
+        \begin{routeParameter}
+            \noRouteParameter{no parameter}
+        \end{routeParameter}
+
+        \begin{routeRequest}{application/json}
+            \begin{routeRequestBody}
+{
+    "query": "some document or query"
+}
+            \end{routeRequestBody}
+        \end{routeRequest}
+
+        \begin{routeResponse}{application/json}
+            \begin{routeResponseItem}{200}{ok}
+                \begin{routeResponseItemBody}
+"preprocessing result"
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{400}{error: Bad Request}
+                \begin{routeResponseItemBody}
+{
+    "message": "The body has not been correctly formatted"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+        \end{routeResponse}
+    \end{apiRoute}
+
+    \caption{Preprocessing POST request}
+    \label{fig:preprocessing-request}
+\end{figure}
+
+\subsection{Synchronization Endpoint}\label{subsec:synchronization-endpoint}
+The implementation of the synchronization pipeline is described in Figure~\ref{fig:sync-request}.
+This endpoint is used as a helper endpoint to help us migrate the data and synchronize it between the MongoDB and Elasticsearch databases. \\ \\
+The synchronization endpoint will take \verb|skip| as a parameter.
+If the skip parameter is a number greater than 0, then it will skip the synchronization of the first $n$ documents.
+Otherwise, if the skip is set to \("\)auto\("\), then the system will retrieve the number of documents present in the Elasticsearch database and skip all of those documents.
+The skip parameter has been introduced to reduce the strain on the Elasticsearch cluster, since all the skipped documents will not make calls to Elasticsearch.
+
+\begin{figure}[!h]
+    \begin{apiRoute}{put}{/api/v1/sync}{synchronize documents between MongoDB and Elasticsearch}
+        \begin{routeParameter}
+            \routeParamItem{skip}{skip checking some of the documents (less strain on the Elastic cluster)}
+        \end{routeParameter}
+
+        \begin{routeResponse}{application/json}
+            \begin{routeResponseItem}{200}{ok}
+            \end{routeResponseItem}
+
+            \begin{routeResponseItem}{500}{error: Internal Server Error}
+                \begin{routeResponseItemBody}
+{
+    "message": "Some error string"
+}
+                \end{routeResponseItemBody}
+            \end{routeResponseItem}
+        \end{routeResponse}
+    \end{apiRoute}
+
+    \caption{Synchronization PUT request}
+    \label{fig:sync-request}
+\end{figure}

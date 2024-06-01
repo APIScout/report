@@ -1,0 +1,56 @@
+\subsection{Evaluation Methods}\label{subsec:evaluation-methods}
+To measure the performance of an information retrieval system, we can use several different metrics.
+These metrics can be divided into two distinct categories: offline metrics~\cite{canamares_offline_2020} and online metrics~\cite{hofmann_online_2016}.
+Offline metrics are used to evaluate the performance of the system before this is deployed.
+On the other hand, online metrics are used to measure performance after the system has been deployed.
+Offline evaluation methods can also be divided into two subgroups, order-unaware and order-aware metrics~\cite{canamares_offline_2020}.
+To evaluate our system, we used metrics from both subgroups.
+
+\subsubsection{Order-Unaware Metrics}
+In order-unaware metrics, the order of the results does not impact the score of the metric.
+The most popular order-unaware metrics are precision (Formula ~\ref{eq:precision-redef}), recall (Formula ~\ref{eq:recall-redef}) and F1 score (Formula ~\ref{eq:f1-redef}).
+
+\begin{equation}
+    P@K = \frac{\text{Relevant retrieved documents}}{K}
+    \label{eq:precision-redef}
+\end{equation}
+
+\begin{equation}
+    R@K = \frac{\text{Relevant retrieved documents}}{\text{All relevant documents}}
+    \label{eq:recall-redef}
+\end{equation}
+
+\begin{equation}
+    F1@K = 2 \frac{P@K \cdot R@K}{P@K + R@K}
+    \label{eq:f1-redef}
+\end{equation}
+
+\noindent All three of these metrics have been used in our evaluation process in the variant $@K$.
+Where $K$ is the number of retrieved documents.
+This was done in order to evaluate the system by increasing $K$ and seeing how the metrics evolved the more documents we retrieved.
+Moreover, all of these metrics are computed for a single query.
+To get the overall precision of the system, we compute the metric $@K$ for each query and divide it by the total number of queries (Formula~\ref{eq:overall}).
+
+\begin{equation}
+    \text{$\overline{Metric}$}@K = \frac{1}{Q}\sum_{q=1}^Q \text{Metric}@K_q
+    \label{eq:overall}
+\end{equation}
+
+\subsubsection{Order-Aware Metrics}
+On the other hand, order-aware metrics take into consideration the ordering of the results when computing the score.
+The metrics used by us are the average precision (Formula~\ref{eq:ap}) and the mean average precision (Formula~\ref{eq:map})~\cite{yilmaz_new_2008} -- also in this case in their $@K$ variant.
+
+\begin{equation}
+    AP@K = \frac{1}{K} \sum_{k=1}^{K} P@k \cdot rel_k
+    \label{eq:ap}
+\end{equation}
+
+\noindent In the average precision formula, $K$ is the number of relevant results, and $rel_k$ is the binary relevance score for document $k$.
+A score of 0 or 1 is given to all the returned documents.
+If a 0 is given, this means that the document is not relevant to the query.
+On the other hand, 1 means that the document is relevant.
+
+\begin{equation}
+    MAP@K = \frac{1}{Q} \sum_{q=1}^{Q} AP@K_q
+    \label{eq:map}
+\end{equation}

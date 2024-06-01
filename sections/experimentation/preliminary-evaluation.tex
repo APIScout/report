@@ -1,0 +1,84 @@
+\section{Evaluation}\label{sec:preliminary-evaluation}
+
+\subsection{Method}\label{subsec:method}
+To evaluate the performance of our solution, we used average precision and recall.
+In information retrieval systems~\cite{canamares_offline_2020}, precision is defined as the inverse of the position in which the document -- defined in the ground truth -- was found in (Equation~\ref{eq:precision}).
+Where $POS$ is the position in which the document was found in ($1$ to $5$ if the document is in the top $5$, $0$ otherwise).
+\begin{equation}
+    P_i = \frac{1}{POS_i}
+    \label{eq:precision}
+\end{equation}
+The average precision is the average of the precisions among all queries defined in the ground truth (Equation ~\ref{eq:avg-precision}).
+Where $N$ is the total number of queries in the ground truth.
+\begin{equation}
+    \overline{P} = \frac{1}{N} \cdot \sum^N_{i=1}P_i
+    \label{eq:avg-precision}
+\end{equation}
+Finally, the recall is defined as the number of documents found in the top $5$ -- regardless of the position they were found in -- over the total number of queries (Equation~\ref{eq:recall}).
+Where $C$ is the number of documents found in the top $5$, and $N$ is the total number of queries in the ground truth.
+
+\begin{equation}
+    R = \frac{C}{N}
+    \label{eq:recall}
+\end{equation}
+
+\subsection{Results}\label{subsec:results}
+The results obtained with the embedding + K-NN solution are very promising, as we can see in the t-SNE plot (Figure~\ref{fig:tSNE-plot}, Subsection~\ref{fig:tSNE-plot}). \\ \\
+With the \("\)Y\("\) markers representing the queries, and the dots representing the most similar documents found for that query, we can see that the dots and \("\)Y\("\) markers of the same colors are fairly close to each other. \\ \\
+Moreover, we performed a validation step with a ground truth.
+From the validation step, we concluded that the average precision and recall of the document retrieval are:
+\[\overline{P} = 0.6 ~~~~~~ R = 1.0\]
+This validation was done on 10 different queries.
+The position in which each ground truth appeared in the searches can be found in Figure~\ref{fig:ground-truth-eval}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=13cm]{assets/png/experimentation/sne}
+    \caption{t-SNE Plot}
+    \label{fig:tSNE-plot}
+\end{figure}
+
+\begin{figure}[!h]
+    \begin{verbatim}
+  Position in which the ground truth was found:
+
+      "NFL v3 Ply-by-Play" was found at position #1
+      "AWS IoT Secure Tunneling" was found at position #4
+      "Transport Department" was found at position #4
+      "Text Analytics & Sentiment Analysis API | api.text2data.com" was
+        found at position #4
+      "MailboxValidator Free Email Checker" was found at position #1
+      "Interzoid Country Data Standardization API" was found at position #1
+      "Soccer v3 Projections" was found at position #1
+      "PolicyClient" was found at position #1
+      "NetworkManagementClient" was found at position #3
+      "Interzoid Get Weather City API" was found at position #2
+    \end{verbatim}
+    \caption{Ground Truth Evaluation}
+    \label{fig:ground-truth-eval}
+\end{figure}
+
+\noindent As we can see, all ground truths we found in the top 5 results -- hence $R = 1.0$.
+The validation on the ground truth, though, does not paint the full picture of the capabilities this solution offers.
+For example, Figure~\ref{fig:query-example} represents the top 5 documents returned by the information retrieval system if we try searching using the query: \("\)american sports news\("\). \\ \\
+As we can see in Figure~\ref{fig:query-example}, the engine is able to recognize that both the \textit{NFL} and the \textit{MLB} are professional American sports leagues.
+The former being the National Football League, and the latter being the Major League Baseball.
+Moreover, it is also able to understand that soccer is a sport and return it. \\ \\
+As can be seen both in the average precision ($\overline{P} = 0.6$), and the above example, there are still some noisy results that match part or none of the queries, but this is acceptable.
+The reason is that this is not the only means of searching.
+To further filter the documents returned by the information retrieval system, we will implement a DSL for the user to specify filters to apply to the output of the natural language query.
+
+\begin{figure}[!h]
+    \begin{verbatim}
+            These are the top 5 results of the query "american sports news":
+
+                1. NFL v3 Play-by-Play     v.1.0   [67%]
+                2. News Plugin             v.1     [66%]
+                3. Soccer v3 Projections   v.1.0   [64%]
+                4. MLB v3 Projections      v.1.0   [64%]
+                5. NFL v3 Scores           v.1.0   [64%]
+    \end{verbatim}
+
+    \caption{Example Output of a Query}
+    \label{fig:query-example}
+\end{figure}

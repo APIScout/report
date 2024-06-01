@@ -1,0 +1,13 @@
+\chapter{Feasibility Study}\label{ch:experimentation}
+
+With the API Scout platform being a data aggregator for OpenAPI Specifications, we need a way of efficiently indexing and searching through the plethora of crawled documents in our database.
+The goal of this experimentation section is to have a better understanding of the technologies and algorithms to use during the development of the platform. \\ \\
+In the following sections, we will see an in-depth explanation of how the indexing and retrieval of documents will be implemented, as well as an evaluation of this solution on a test dataset.
+The dataset used in this study is composed of \verb|~|3'000 specifications taken from APIs.guru\footnote{https://apis.guru/}.
+This dataset has been used in several other research papers on APIs~\cite{ma_restful_2023, kim_empirical_2019, tsai_rest_2021, yasmin_first_2020, moon_api-miner_2022, yang_towards_2018, ma_api_2020}.
+
+\input{sections/experimentation/data-analysis}
+\input{sections/experimentation/approach}
+\input{sections/experimentation/ground-truth}
+\input{sections/experimentation/preliminary-evaluation}
+\input{sections/experimentation/comparison}

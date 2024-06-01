@@ -1,0 +1,54 @@
+\section{Web Server}\label{sec:web-server}
+Finally, we have the Web server container.
+This container is based off of a custom Docker image -- described in Listing~\ref{lst:dokerfile} -- in which we build both the Golang application, and the OpenAPI specification -- to create the web documentation for the service.
+
+\begin{lstlisting}[language=docker,caption={Dockerfile for the web server},label={lst:dokerfile},captionpos=b]
+           FROM golang:alpine as builder
+
+           WORKDIR /backend
+
+           COPY go.* ./
+           RUN go mod download
+
+           COPY . .
+           RUN go install github.com/swaggo/swag/cmd/swag@latest
+           RUN cd app && swag init
+           RUN go build -o /backend/build/app /backend/app
+
+           FROM alpine:latest
+
+           WORKDIR /backend
+
+           ARG GIN_MODE
+           ARG MODELS_HOST
+
+           COPY --from=builder /backend/build/app /backend/build/app
+
+           EXPOSE 8080
+           ENTRYPOINT [ "/backend/build/app" ]
+\end{lstlisting}
+
+\noindent After pushing the Docker image to Docker Hub, we pull it from the server and use the Docker compose document in Listing~\ref{lst:compose-web} to start the service.
+Moreover, this is the only service that exposes a port outside the Docker network, namely, port 80.
+
+\begin{lstlisting}[language=docker-compose,caption={Docker compose for the Web server},label={lst:compose-web},captionpos=b]
+                   version: "3.8"
+                   services:
+                     web_server:
+                       image: edoriggio/api-scout:dev
+                       container_name: backend
+                       environment:
+                         "GIN_MODE=release"
+                         "MODELS_HOST=models"
+                       volumes:
+                         - ./config:/backend/config
+                         - ./ca.crt:/backend/ca.crt
+                       networks:
+                         - backend
+                       ports:
+                         - "8080:80"
+
+                   networks:
+                     backend:
+                       external: true
+\end{lstlisting}

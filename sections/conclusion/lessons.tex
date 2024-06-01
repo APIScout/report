@@ -1,0 +1,13 @@
+\section{Lessons Learned}\label{sec:lessons-learned}
+Throughout the course of this thesis, we have learned several key lessons that can also be applied in the future to improve our system.
+
+\begin{description}
+    \item \textbf{Have a standardized way of representing and saving data.} This has been crucial in our case since we were dealing with data scraped on different occasions, by different people, and from different sources.
+    This helped us especially when building the database mapping for Elasticsearch.
+    \item \textbf{Employ scalable algorithms for embedding, indexing, and retrieving.} Since this tool needs to be accessed by possibly multiple users at the same time, it is of paramount importance to use efficient and scalable algorithms that can perform the indexing of the query and the retrieval of the documents in just a few milliseconds.
+    Moreover, as the database grows, the algorithms must be able to handle and search into such a massive database.
+    \item \textbf{Defining a solid ground truth before the evaluation process.} This was one of the major issues we had in the evaluation part of our proof-of-concept.
+    We defined a ground truth that made some assumptions that could easily be wrong or inaccurate.
+    For this reason, we re-built our ground truth -- and more in general our evaluation framework -- when evaluating the finished system.
+    \item \textbf{Evaluate different aspects of the system.} This helped us to have a clearer view of how our system performed overall.
+\end{description}

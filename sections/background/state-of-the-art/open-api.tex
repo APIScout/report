@@ -1,0 +1,121 @@
+\subsection{OpenAPI Specifications}\label{subsec:openapi-specifications}
+The OpenAPI Specification~\cite{noauthor_openapi_nodate} is an Interface Definition Language (IDL) used for documenting HTTP-based APIs~\cite{de_api_2017}. \\ \\
+The OpenAPI Specification standard was first published in 2011 as the \("\)Swagger Specification\("\) -- since it was part of the Swagger Framework.
+In 2015, however, the Swagger Specification was donated by SmartBear Software -- the company that acquired the Swagger Specification -- to an organization called OpenAPI Initiative, which was under the sponsorship of the Linux Foundation.
+Finally, in 2016, the Swagger Specification was renamed in \("\)OpenAPI Specification\("\) (OAS), and moved to another repository.
+In 2021, version 3.1.0 -- the current version -- was released by the OpenAPI Initiative (Figure~\ref{lst:oas-example}). \\ \\
+
+\begin{lstlisting}[label={lst:oas-example},language=json,caption={Example of an OAS JSON document},captionpos=b,breaklines=true]
+      {
+          "openapi": "3.1.0",
+          "info": {
+              "title": "Swagger Petstore",
+              "version": "1.0.0"
+          },
+          "paths": {
+              "/pets/{petId}": {
+                  "get": {
+                      "summary": "Info for a specific pet",
+                      "parameters": [
+                          {
+                              "name": "petId",
+                              "in": "path",
+                              "description": "The id of the pet",
+                              "schema": {
+                                  "type": "string"
+                              }
+                          }
+                      ],
+                      "responses": {
+                          "200" : {
+                              "$ref" : "#/components/schemas/Pet"
+                          }
+                      }
+                  }
+              }
+          },
+          "components": {
+              "schemas": {
+                  "Pet": {
+                      "type": "object",
+                      "properties": {
+                          "id": {
+                              "type": "string",
+                              "format": "int64"
+                          },
+                          "name": {
+                              "type": "string"
+                          }
+                      }
+                  }
+              }
+          }
+      }
+\end{lstlisting}
+
+\noindent The OpenAPI specification, however, is not the only one.
+There are several other alternative modeling languages for describing RESTful APIs.
+For example, there is the RESTful API Modeling Language (RAML) \footnote{https://raml.org/}, and the API Blueprint \footnote{https://apiblueprint.org/} language.
+These languages, though, are not as used as the OAS\@.
+So much so, that the GitHub repository containing the RAML language has been archived on the 17\textsuperscript{th} of February 2024\footnote{https://github.com/raml-org/raml-spec}.
+
+\begin{lstlisting}[label={lst:raml},caption={Example of a RAML document},captionpos=b,language=yaml]
+            #%RAML 1.0
+            title: Mobile Order API
+            baseUri: http://localhost:8081/api
+            version: 1.0
+
+            uses:
+              assets: assets.lib.raml
+
+            annotationTypes:
+              monitoringInterval:
+                type: integer
+
+            /orders:
+              displayName: Orders
+              post:
+              /{orderId}:
+                get:
+                  responses:
+                    200:
+                      body:
+                        application/json:
+                          type: assets.Order
+                        application/xml:
+                          type: !include schemas/order.xsd
+\end{lstlisting}
+
+\begin{lstlisting}[label={lst:api-blueprint},caption={Example of an API Blueprint document},captionpos=b,language=json]
+   FORMAT: 1A
+   # Responses API
+   # Group Questions
+   ## My Question [/question]
+   ### Create a New Question [POST]
+
+   + Request (application/json)
+       + Body
+               {
+                 "question": "Favourite language?",
+                 "choices": [
+                   "Swift"
+                 ]
+               }
+       + Schema
+               {
+                 "$schema": "http://json-schema.org/draft-04/schema#",
+                 "type": "object",
+                 "properties": {
+                   "question": {
+                     "type": "string"
+                   },
+                   "choices": {
+                     "type": "array",
+                     "items": {
+                       "type": "string"
+                     },
+                     "minItems": 1
+                   }
+                 }
+               }
+\end{lstlisting}

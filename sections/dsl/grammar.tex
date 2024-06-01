@@ -1,0 +1,38 @@
+\section{Grammar}\label{sec:grammar}
+In Figure~\ref{fig:bnf}, we have the BNF (Backus Normal Form) notation of our filtering DSL\@.
+It is important to note that part of this grammar -- namely the \textlangle~version \textrangle~and \textlangle~version core \textrangle~non-terminals -- as well as the MAJOR, MINOR, PATCH, PRERELEASE, and BUILD tokens -- are taken from the official semantic versioning page \footnote{https://github.com/semver/semver/blob/master/semver.md}.
+As we can see, several tokens are also used to represent terminals in our grammar.
+The tokens are SPACE, PARAMETER, STRING, DATE, BOOLEAN, INTEGER, MAJOR, MINOR, PATCH, PRERELEASE, and BUILD\@.
+All of these tokens will be discussed more in detail in the following sections of this chapter. \\ \\
+In particular, PARAMETER is discussed in Section~\ref{sec:parameters}.
+STRING, DATE, BOOLEAN, and INTEGER are discussed in Section~\ref{sec:types}.
+MAJOR, MINOR, PATCH, PRERELEASE, and BUILD are discussed in Section~\ref{sec:types}.
+
+\begin{figure}[!h]
+    \begin{center}
+        \begin{bnf}
+            \textlangle~group \textrangle ::= \textlangle~filter \textrangle | \textlangle~filter \textrangle~SPACE \textlangle~group \textrangle
+            ;;
+            \textlangle~filter \textrangle ::= \textlangle~lhs \textrangle \textlangle~operator \textrangle \textlangle~rhs \textrangle
+            ;;
+            \textlangle~lhs \textrangle ::= PARAMETER
+            ;;
+            \textlangle~rhs \textrangle ::= STRING | DATE | BOOLEAN | INTEGER | \textlangle~version \textrangle | \textlangle~range \textrangle
+            ;;
+            \textlangle~operator \textrangle ::= '==' | '!=' | '\textasciitilde=' | '<>' | '>=' | '<=' | '>' | '<'
+            ;;
+            \textlangle~range \textrangle ::= \textlangle~bracket \textrangle \textlangle~limit \textrangle~',' \textlangle~limit \textrangle \textlangle~bracket \textrangle
+            ;;
+            \textlangle~bracket \textrangle ::= '[' | '(' | ']' | ')'
+            ;;
+            \textlangle~limit \textrangle ::= INTEGER | DATE | \textlangle~version \textrangle
+            ;;
+            \textlangle~version \textrangle ::= \textlangle~version core \textrangle | \textlangle~version core \textrangle~'-' PRERELEASE | \textlangle~version core \textrangle~'+' BUILD | \textlangle~version core \textrangle~'-' PRERELEASE '+' BUILD
+            ;;
+            \textlangle~version core \textrangle ::= MAJOR '.' MINOR '.' PATCH
+        \end{bnf}
+    \end{center}
+
+    \caption{Filtering DSL in the BNF notation}
+    \label{fig:bnf}
+\end{figure}
