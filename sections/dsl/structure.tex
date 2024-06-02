@@ -10,13 +10,13 @@ These requirements are:
 
 \begin{enumerate}
     \item The parameter must be valid -- i.e.\ it should exist;
-    \item The array of supported types of the operator must contain the type of the parameter;
-    \item The value's type must the parameter's type;
-    \item In the case of a range filter:
+    \item The map of supported types of the operator must contain the type of the parameter;
+    \item The value's type must match the parameter's type;
+    \item In the case of the range operator's right-hand side:
     \begin{itemize}
-        \item The range must be surrounded by either square or round brackets;
-        \item The range must be composed of two elements;
-        \item The types of the range delimiters must match the one of the parameter.
+        \item The range must be surrounded by either square or round brackets, opened to the left of the range and closed to the right of the range;
+        \item The range must be composed of only two elements;
+        \item The types of the range delimiters must match the ones of the parameter.
     \end{itemize}
 \end{enumerate}
 

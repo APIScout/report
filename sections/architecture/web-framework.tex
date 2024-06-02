@@ -1,11 +1,11 @@
 \section{Web Framework}\label{sec:web-framework-1}
-The Web framework module handles all the connections made by external users to the service.
+The Web framework module handles all the connections made by external users to our service.
 The framework publishes several different endpoints, as well as a Swagger documentation page of the exposed endpoints. \\ \\
 The endpoints handle the basic operations of the tool, namely indexing, searching, and retrieving.
-Moreover, there are two more endpoints that are used as helpers for migration of the data and evaluation of the system's performance.
+Moreover, there are two more endpoints that are used as helpers for data migration and evaluation of the system's performance.
 
 \subsection{Indexing Endpoint}\label{subsec:indexing-endpoint-1}
-The indexing endpoint (\verb|POST| \verb|/api/v1/specification|) is used to insert new OpenAPI specifications in both MongoDB and Elasticsearch (Figure~\ref{fig:flow-index}). \\ \\
+The indexing endpoint (\verb|POST| \verb|/api/v1/specification|) is used to insert new OpenAPI Specifications in both MongoDB and Elasticsearch (Figure~\ref{fig:flow-index}). \\ \\
 The endpoint takes an OpenAPI specification wrapped in an \verb|api| object, it extracts the natural language fields from it, and then passes it to the main pipeline.
 The pipeline is composed of an embedding pipeline component -- which creates the vector embeddings for the specification, and an indexing component.
 The latter is used to structure the specification in the correct way and send it both to MongoDB and to Elasticsearch.
@@ -27,7 +27,7 @@ After passing a query or a specification to the endpoint, it will be preprocesse
 This pipeline consists of two main components, the embedding pipeline component and the DSL parsing component.
 While the former creates the vector embedding from the preprocessed specification, the latter will extract the DSL field of the request and translate our DSL language into API calls that Elasticsearch uses to make its API calls.
 Finally, the search query is sent to Elasticsearch, which will retrieve the most similar documents to the query.
-Moreover, several calls will be made to MongoDB to retrieve the json specifications -- if requested by the user.
+Moreover, several calls will be made to MongoDB to retrieve the JSON specifications -- if requested by the user.
 
 \begin{figure}[!h]
     \begin{center}
@@ -39,7 +39,7 @@ Moreover, several calls will be made to MongoDB to retrieve the json specificati
 \end{figure}
 
 \subsection{Retrieval Endpoint}\label{subsec:retrieval-endpoint-1}
-The retrieval endpoint (\verb|GET| \verb|/api/v1/specification/{id}|) is used to get a specific OpenApi specification (Figure~\ref{fig:flow-retrieve}).
+The retrieval endpoint (\verb|GET| \verb|/api/v1/specification/{id}|) is used to get a specific OpenAPI Specification (Figure~\ref{fig:flow-retrieve}).
 This endpoint will simply search for the given id in both the Elasticsearch and MongoDB databases, and return a document which will be a combination of the two documents returned by the two databases.
 
 \begin{figure}[!h]
@@ -55,10 +55,10 @@ This endpoint will simply search for the given id in both the Elasticsearch and 
 The preprocessing endpoint (\verb|POST| \verb|/api/v1/preprocess|) is used to simulate the preprocessing step for a search query (Figure~\ref{fig:flow-preprocess}).
 This endpoint has been implemented has a helper endpoint during the evaluation process of this thesis. \\ \\
 A document or query is passed as input to the endpoint.
-The document will then go through a preprocessing pipeline.
+The document will then go through the preprocessing pipeline.
 In this pipeline, all the natural language tags will be extracted from the document, and then the resulting string will be cleaned of every markdown structure.
 The endpoint will then return to the user a string representing the cleaned version of the input.
-In a normal scenario -- i.e.\ in the case of a search or indexing query -- this string will be passed to the embedding model which will use the text to create a vector embedding for the OpenAPI specification or the query.
+In a normal scenario -- i.e.\ in the case of a search or indexing query -- this string will be passed to the embedding model which will use the text to create a vector embedding for the OpenAPI Specification or query.
 
 \begin{figure}[!h]
     \begin{center}
@@ -72,7 +72,7 @@ In a normal scenario -- i.e.\ in the case of a search or indexing query -- this 
 \subsection{Synchronization Endpoint}\label{subsec:synchronization-endpoint-1}
 The synchronization endpoint (\verb|PUT| \verb|/api/v1/sync|) is an idempotent endpoint used to index documents that are present in the MongoDB database in Elasticsearch (Figure~\ref{fig:flow-sync}). \\ \\
 This endpoint will make sure that the two databases are always in sync.
-If, while going through the MongoDB documents, it finds a document that is already in the Elasticsearch database, then it will not insert it again -- from here the idempotence and the choosing of the \verb|PUT| method for this endpoint.
+If, while going through the MongoDB documents, it finds a document that is already in the Elasticsearch database, then it will not insert it again -- from here the idempotence and the choice of the \verb|PUT| method for this endpoint.
 
 \begin{figure}[!h]
     \begin{center}

@@ -4,6 +4,6 @@ Such vectors represent the semantic meaning of the words in the document.
 This means that we can use the distance between two or more documents to understand if those documents are semantically similar or not. \\ \\
 To create such embeddings, we can use different models.
 These models range from limited transfer learning pre-trained word embedding models -- such as Word2Vec~\cite{mikolov_distributed_2013} and GloVe~\cite{pennington_glove_2014} to strong transfer learning pre-trained sentence embedding models -- such as Universal Sentence Encoder~\cite{cer_universal_2018}. \\ \\
-There are two different types of Universal Sentence Encoder (USE) models, one using the transformer architecture~\cite{vaswani_attention_2017}, and one is formulated as a Deep Averaging Network (DAN)~\cite{iyyer_deep_2015}.
-The transformer-based model targets high accuracy, but the model has a greater complexity.
+There are two different types of Universal Sentence Encoder (USE) models, one using the transformer architecture~\cite{vaswani_attention_2017}, and one formulated as a Deep Averaging Network (DAN)~\cite{iyyer_deep_2015}.
+The transformer-based model targets high accuracy, but is more complex.
 On the other hand, the DAN-based model is faster at generating vectors, but this comes with slightly worse accuracy.

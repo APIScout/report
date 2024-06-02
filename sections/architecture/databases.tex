@@ -6,7 +6,7 @@ In the following sections, we will explain more in depth the reasons behind choo
 \subsection{Specifications Database}\label{subsec:specifications-database}
 The specifications database is a MongoDB instance.
 Since OpenAPI has multiple versions, and not all API specifications adhere to this standard, it is possible that the specifications have a slightly different structure.
-The reason behind choosing only some of the fields fo the original dataset is that we consider these to be the most relevant when building a retrieval system and a filtering DSL\@.
+The reason behind choosing only some of the fields of the original dataset is that we consider these to be the most relevant when building a retrieval system and a filtering DSL\@.
 We used MongoDB to save the OpenAPI specifications both because MongoDB handles well these kind of JSON/YAML documents, and because other API Analytics services -- outside the scope of this thesis, but which provide the source of the dataset -- rely on such database and data structure~\cite{souhaila_serbout_apistic_2024}. \\ \\
 The MongoDB database is composed of two collections, one containing the specifications and one containing the metrics for those specifications.
 
@@ -57,7 +57,7 @@ In addition, we also highlight those fields that have been used in API Scout.
 
 \subsubsection{Metrics Collection}
 In the metrics collection, we have one document for each specification.
-The connection between the documents is done through the MongoID, same MongoID in the specification collection and metrics collection means the two documents are related.
+The connection between the documents is done through the MongoID. If the MongoID in the specification collection and the one in the metrics collection are the same, this means that the two documents are related.
 The metrics documents store some statistics about the corresponding OpenAPI specification.
 Listing~\ref{lst:data-metrics} and Table~\ref{tab:data-metrics} describe the structure of these documents.
 Moreover, as before, we also highlight those fields that have been used in API Scout.
@@ -167,9 +167,9 @@ Moreover, as before, we also highlight those fields that have been used in API S
 \end{table}
 
 \subsection{Embeddings Database}\label{subsec:embeddings-database}
-To search for API specifications by querying their natural language descriptions, however, we need to save the vectorization of the natural language extracted from the OpenAPI specification somewhere.
-Since the MongoDB data structure could not be modified, the chosen database for the vectors was Elasticsearch -- which also contains metadata and metrics of the API specification. \\ \\
+To search for API specifications by querying their natural language descriptions, however, we need to save the vectorization of the natural language extracted from the OpenAPI Specification somewhere.
+Since the MongoDB data structure could not be modified, the chosen database for storing the vectors was Elasticsearch -- which also contains metadata and metrics of the API specifications. \\ \\
 The reason behind choosing Elasticsearch is that it offers out-of-the-box solutions to deal with textual embeddings.
-For instance, the embeddings -- when indexed -- are saved into a Small World Graph (Section ~\ref{subsec:hierarchical-navigable-small-world-graphs}), which helps with retrieval performance.
-In addition, it already offers an approximate K-NN search (Section~\ref{subsec:hierarchical-navigable-small-world-graphs}) API with pre- and post-filtering of the data.
+For instance, the embeddings -- when indexed -- are saved into a Hierarchical Navigable Small World graph (Section ~\ref{subsec:hierarchical-navigable-small-world-graphs}), which helps with retrieval performance.
+In addition, it already offers an approximate K-NN search (Section~\ref{subsec:hierarchical-navigable-small-world-graphs}) API with the possibility of pre- or post-filtering the data.
 The aforementioned metadata and metrics are used to pre-filter the data in the K-NN search queries.

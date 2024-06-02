@@ -1,9 +1,9 @@
-\section{DSL Compiler}\label{sec:dsl-parser}
-Since we want to use the filters given bt the users to search the documents in our Elasticsearch database, we need a way of translating our DSL into the Search DSL provided by Elasticsearch.
+\section{DSL Compiler}\label{sec:dsl-compiler}
+Since we want to use the filters given us by the users to search the documents in our Elasticsearch database, we need a way of translating our DSL into the Search DSL provided by Elasticsearch.
 The conversion of the filters is handled by the Elasticsearch Converter (Figure~\ref{fig:backend-architecture}) component.
 To generate the Elasticsearch filters, we have created a mapping between our DSL operators and the operators provided by Elasticsearch (Table~\ref{tab:dsl-to-es}). \\ \\
 As stated before, the filter using the range operator will be split up into two different filters, one for the lower bound and one for the upper bound.
-For this reason, there is no range mapping in Table~\ref{tab:dsl-to-es} between the DSL and Elasticsearch. \\ \\
+For this reason, there is no mapping in Table~\ref{tab:dsl-to-es} for the range operator between the DSL and Elasticsearch. \\ \\
 The single filters will then be joined together to form a \verb|bool| query.
 The structure of such query is described in Listing~\ref{lst:bool-query}.
 The \verb|bool| query contains two sections, \verb|must| and \verb|must_not|.
@@ -12,7 +12,7 @@ The filters with the \verb|!=| operator will be added to the \verb|must_not| arr
 In Elasticsearch, the \verb|must| section represents an AND operator, thus a logic AND will be done between all filters contained in that array.
 On the other hand, the \verb|must_not| represents a NOT operator. \\ \\
 In addition to the user-specified filters, API Scout will -- by default -- add some filters in the query.
-In particular, we will add a \verb|api.latest==true| if a \verb|api.commits| filter is not specified, and a \verb|length>200| if a \verb|length| filter is not specified.
+In particular, it will add a \verb|api.latest==true| if an \verb|api.commits| filter is not specified, and a \verb|length>200| if a \verb|length| filter is not specified.
 
 \begin{center}
     \begin{lstlisting}[label={lst:bool-query},caption={Structure of an Elasticsearch bool query},captionpos=b,language=json]

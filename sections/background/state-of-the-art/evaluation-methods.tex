@@ -27,9 +27,9 @@ The most popular order-unaware metrics are precision (Formula ~\ref{eq:precision
 
 \noindent All three of these metrics have been used in our evaluation process in the variant $@K$.
 Where $K$ is the number of retrieved documents.
-This was done in order to evaluate the system by increasing $K$ and seeing how the metrics evolved the more documents we retrieved.
+This was done to evaluate the system by increasing $K$ and seeing how the metrics evolved the more documents we retrieved.
 Moreover, all of these metrics are computed for a single query.
-To get the overall precision of the system, we compute the metric $@K$ for each query and divide it by the total number of queries (Formula~\ref{eq:overall}).
+To get the overall precision, recall, and F1 score of the system, we compute the metric $@K$ for each query and divide it by the total number of queries (Formula~\ref{eq:overall}).
 
 \begin{equation}
     \text{$\overline{Metric}$}@K = \frac{1}{Q}\sum_{q=1}^Q \text{Metric}@K_q

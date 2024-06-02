@@ -5,11 +5,11 @@ Moreover, we carried out two different types of experiments to test several diff
 
 \subsection{Needles in a Haystack}\label{subsec:needles-in-a-haystack}
 In this first batch of experiments, we wanted to test the accuracy of the system's document retrieval.
-Since the system contains almost one million documents (the haystack), it is very difficult to know the precise number of relevant documents for each user query -- the number of relevant documents is needed for the computation of both the recall and the F1 score~\ref{subsec:evaluation-methods}.
+Since the system contains almost one million documents (the haystack), it is very difficult to know the precise number of relevant documents for each user query -- the number of relevant documents is needed for the computation of both the recall and the F1 score (Section~\ref{subsec:evaluation-methods}).
 For this reason, we decided to imagine four different queries, and for each one of them, we created four different API specifications (the needles).
-By doing so, we know the number of relevant documents -- four in this case -- and we can check how many the system is able to retrieve. \\ \\
+By doing so, we know the number of relevant documents per query -- four in this case -- and we can check how many the system is able to retrieve. \\ \\
 Initially, we ran this experiment on four different queries, and for each query, we used ChatGPT 3.5 \footnote{https://chatgpt.com/} to help us generate valid random API specifications related to that query.
-The generated specifications can be found in our repository \footnote{https://github.com/APIScout/backend} in the \verb|scripts/evaluation/data/specs| directory.
+The generated specifications can be found in our repository \footnote{https://github.com/APIScout/evaluation} in the \verb|needles| directory.
 The result of this experiment can be found in Figure~\ref{fig:nh-1}.
 In Table~\ref{tab:metrics-prf}, we have the overall score for each metric (Equation~\ref{eq:overall}) for each $@K$.
 
@@ -29,7 +29,7 @@ In Table~\ref{tab:metrics-prf}, we have the overall score for each metric (Equat
 \end{table}
 
 \noindent In addition to this experiment, we also tried to see if the length of the query would impact the retrieval performance of the system.
-To test this, we took the query, for example, \("\)weather forecast service\("\), and created four subqueries.
+To test this, we took the query -- for example \("\)weather forecast service\("\) -- and created four sub-queries.
 The generated sub-queries would be, in this case, \("\)weather\("\), \("\)weather forecast\("\), and \("\)weather forecast service\("\).
 The fourth one, however, is a random substring taken from one of the natural language tags of the specification.
 For example, \("\)the API returns the next 4 days of weather forecasts\("\).

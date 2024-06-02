@@ -51,14 +51,14 @@ If some errors are encountered in the process of indexing the document, then a \
 
 \subsection{Searching Endpoint}\label{subsec:searching-endpoint}
 The implementation of the searching endpoint is described in Figure~\ref{fig:searching-request}.
-The endpoint takes as parameters the size of a page, the number of the page to be returned, and the $k$ to be assigned to the K-NN algorithm. \\ \\
+The endpoint takes as parameters the size of a page, the number of the page to be returned, and the $k$ to be assigned as parameter to the K-NN algorithm. \\ \\
 Moreover, it takes a body as input.
 The body consists of three main parts, the \verb|fragment|, the \verb|filters|, and the \verb|fields|.
-The \verb|fragment| contains the search query, this will then be embedded and an approximate K-NN algorithm will be performed to retrieve the $k$ most similar documents.
+The \verb|fragment| contains the search query, this will then be embedded and an approximate K-NN algorithm will retrieve the $k$ most similar documents.
 The results will be pre-filtered if filters are provided in the \verb|filters| section of the body.
 The \verb|filters| contain a query written using our DSL\@.
 Finally, the \verb|fields| array contains all the fields that the user wants when receiving the results.
-For example, if the user only specifies \verb|metadata|, then the endpoint will not return the strings containing the actual specification. \\ \\
+For example, if the user only specifies \verb|metadata|, then the endpoint will not return the strings containing the actual specifications. \\ \\
 In Listing~\ref{lst:search-response} we have a full example of a response the user will receive when using the search endpoint.
 Each returned document is composed of \verb|metadata| (Lines 3--50) and \verb|specification| (Line 51) sections. \\ \\
 The \verb|metadata| key is used to return all the data relative to the api and its specification.
@@ -234,7 +234,7 @@ The structure of the response will be the same as one of the documents returned 
 \subsection{Preprocessing Endpoint}\label{subsec:preprocessing-endpoint}
 The implementation of the preprocessing pipeline is described in Figure~\ref{fig:preprocessing-request}.
 This endpoint, as said earlier, is a helper endpoint used in the evaluation of the system. \\ \\
-It will simply perform the preprocessing pipeline by extracting the natural language fields from the OpenAPI specification passed as input, and remove all the markdown structures that could be present in those fields. \\ \\
+It will simply perform the preprocessing pipeline by extracting the natural language fields from the OpenAPI Specification given as input, and remove all the markdown structures that could be present in those fields. \\ \\
 The response body of this endpoint will contain a string that represents the cleaned input that would be then embedded by the Universal Sentence Encoder model (Section~\ref{sec:use-model}).
 
 \begin{figure}[!h]

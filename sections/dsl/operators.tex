@@ -3,9 +3,9 @@ To complete the DSL structure, we have defined several different operators.
 These operators can be used to compare values of specific types with each other.
 The operators supported by API Scout are described in Table~\ref{tab:operators}. \\ \\
 In the case of the range operation, the parser will decompose the filter into two different filters.
-Let's take for example, let' take the range \verb|[23,12)|.
-Based on the type of parentheses, the parser will create different filters.
-In this case, it will create a \verb|>=23| and \verb|<12| filter.
+For example, let's take the range \verb|[23,12)|.
+Based on the type of parentheses, the parser will create two different filters.
+In this case, it will create both a \verb|>=23| and a \verb|<12| filter.
 The full list of parentheses conversions is shown in Table~\ref{tab:conversion-table}.
 
 \begin{table}[!h]

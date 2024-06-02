@@ -8,8 +8,8 @@ As said in Section~\ref{sec:motivation}, there exist many OpenAPI aggregators on
 In Table~\ref{tab:comparison}, we can see a comparison between the main aggregators and API Scout.
 As we can see, API Scout contains almost double the amount of API specifications than the sum of specifications contained in all the other aggregators.
 Moreover, API Scout has several features that most of the other aggregators don't have.
-For example, API Scout stores and returns metadata about the API -- anything that was not already present in the OpenAPI Specification for that API -- as well as a set of pre-computed metrics.
-API Scout offers also the possibility to filter the data using a custom filtering DSL designed by us, as well as offering multiple versions of the same specifications -- i.e.\ a commit history
+For example, API Scout stores and returns metadata about the API -- metadata being anything that was not already present in the OpenAPI Specification for that API -- as well as a set of pre-computed metrics.
+API Scout offers also the possibility to filter the data using a custom filtering DSL designed by us, as well as offering multiple versions of the same specifications -- i.e.\ a commit history.
 
 \begin{table}[!h]
     \begin{center}
@@ -33,7 +33,7 @@ API Scout offers also the possibility to filter the data using a custom filterin
 
 \subsection{Research}\label{subsec:research}
 In the literature, we can find several different examples of research done in the field of embedding and indexing of OpenAPI Specifications.
-These papers represent the groundwork on which we built our research on top of.
+These papers represent the groundwork of our thesis.
 The research we have found in the literature can be divided into four main categories: API corpus construction, sentence embedding, OpenAPI Specification embedding, and information retrieval systems.
 
 \subsubsection{API Corpus Construction}
@@ -43,18 +43,18 @@ To retrieve these APIs, they have employed machine learning algorithms to filter
 According to the authors, the objective of this study was to \("\)[allow] researchers and practitioners to harvest a large number of API documentations that can speed up the development of software technologies and reduce the cost of accessing resourceful APIs\("\)~\cite{assefi_intelligent_2022}. \\ \\
 Another paper that deals with the construction of an API corpus is Souhaila et al.~\cite{souhaila_serbout_apistic_2024}, where they built a corpus on OpenAPI Specification metrics.
 A corpus such as this is extremely useful when trying to study the evolution and structure of an OpenAPI Specification.
-In addition to the construction of the corpus, the paper goes more in-depth by analyzing the collected data.
+In addition to the construction of the corpus, the paper goes more in-depth by also analyzing the collected data.
 
 \subsubsection{Sentence Embedding}
 When dealing with the transformation of sentences into vectors, several different methods can be employed.
 In particular, the unsupervised algorithms used by Arora et al.~\cite{arora_simple_2019} and Mohammed et al.~\cite{mohammed_state---art_2021} can maintain the semantic meaning of the sentence.
-This is particularly useful when creating an information retrieval system which uses the meaning of the words as a similarity metric. \\ \\
+This is particularly useful when creating an information retrieval system which uses semantic similarity as a metric. \\ \\
 In addition to these two papers, another one has been published by Mu et al.~\cite{mu_all-but--top_2018}, in which they post-process the embeddings obtained by the embedding algorithms to better capture the semantics of the sentence by removing useless parts of the embedding -- such as the top principal components.
 
 \subsubsection{OpenAPI Specification Embedding}
 When dealing in particular with OpenAPI Specifications, some papers have explored using sentence embedding algorithms to create retrieval systems or to cluster similar specifications together -- effectively creating categories of specifications.
 In the case of the research done by Kotstein et al.~\cite{kotstein_restberta_2024}, they leveraged the natural language parts of API documentation for the training and fine-tuning of a BERT deep learning model.
-The goal of the RESTBERT model is to output a similar specification to the one given as input. \\ \\
+The goal of this trained RESTBERT model is to output a set of similar specifications to the one given as input. \\ \\
 On the other hand, Lu et al.~\cite{lu_comparing_2024} developed a pipeline to cluster OpenAPI Specifications to create categories.
 This pipeline is divided into three main parts -- which have been used as inspiration for our own thesis.
 These parts are: preprocessing, vectorization, and clustering.

@@ -1,7 +1,7 @@
 \chapter{Filtering DSL}\label{ch:filtering-dsl}
 The filtering DSL compiler is a collection of components that handle the logic for the translation of our DSL into a query that can be understood by the Elasticsearch search API\@.
 Let's begin the description of the compiler by understanding the reason behind why we decided to implement it.
-This is a tool that is mainly aimed at researchers to perform any kind of empirical study on a subset of our APIs. \\ \\
+API Scout is a tool that is mainly aimed at researchers to perform any kind of empirical study on a subset of our APIs. \\ \\
 Let's take a real-world scenario.
 Let's say that some researchers are conducting a study on the evolution of security in REST API endpoints over time.
 First of all, they want to find some APIs that have more than a couple of commits in their history, as well as a number of paths between 10 and 100.
@@ -20,7 +20,7 @@ To do so, they could use the filters in Figure~\ref{fig:filter-commits} to retri
 In the case of the range operator (\verb|<>|), the right-hand side is a little bit more complex.
 The round parenthesis indicates that 10 must not be included in the range (thus \verb|>10|), while the square bracket indicates that 100 must be included in the range (thus \verb|<=100|).
 Moreover, the space between the filters indicates a logic AND operation.
-Thus, the resulting APIs must have more than 2 commits, as well as a number of paths between 10 (not included), and 100 (included). \\ \\
+Thus, the resulting APIs must have more than 2 commits, AND a number of paths between 10 (not included), and 100 (included). \\ \\
 The researchers will now have IDs of several APIs with more than two commits in their history.
 What they would like to do now is to retrieve the commit history for those APIs.
 To do so, they can do one search request for each API ID in which they use the filter in Figure~\ref{fig:filter-apis}.

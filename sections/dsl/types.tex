@@ -1,5 +1,5 @@
 \section{Types}\label{sec:types}
-The types supported by our service are explained in Table~\ref{tab:types}.
+The types supported by our tool are explained in Table~\ref{tab:types}.
 These types are then used to check that the filters are valid.
 The types supported by the API Scout DSL range from the most classic types, such as \("\)string\("\), \("\)integer\("\), and \("\)boolean\("\), to more specific ones such as \("\)version\("\), \("\)date\("\), and \("\)range\("\).
 Where \("\)version\("\) is taken from the semver website \footnote{https://semver.org/}, and \("\)range\("\) is a custom type made for this DSL\@.
@@ -9,13 +9,13 @@ Where \("\)version\("\) is taken from the semver website \footnote{https://semve
         \begin{tabular}{l p{15cm}}
             \hline
             \textbf{Name} & \textbf{Description} \\ \hline
-            \verb|string| & An alphanumeric set of characters, must be contained inside \verb|""|, and can contain spaces \\
+            \verb|string| & An alphanumeric set of characters, must be contained inside \verb|""| \\
             \verb|integer| & A positive integer number \\
             \verb|boolean| & A \verb|true| or \verb|false| value \\
             \verb|version| & A semantically valid version (must follow the semantic versioning standard~\cite{preston-werner_semantic_nodate}) (e.g.\ 1.0.0-alpha+c3bh3h) \\
             \verb|date| & A date formatted as \verb|dd/mm/yyyy| (e.g.\ 31/12/2021) \\
             \verb|range| & A set of ordered values contained between two limits.
-            The limits can be of integer, version, or date type (e.g. \verb|[12,24)|, \verb|[1.0.0,3.0.0]|, or \verb|(15/05/2022,16/07/2023)|) \\ \hline
+            The limits can be of integer, version, or date type (e.g. \verb|[12,24)|, \verb|[1.0.0,3.0.0]|,  \verb|(15/05/2022,16/07/2023)|) \\ \hline
         \end{tabular}
     \end{center}
 
